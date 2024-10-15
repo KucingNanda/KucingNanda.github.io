@@ -1,4 +1,7 @@
-.profile {
+body {
+    background-color: ;
+}
+.profileimage {
     display: flex;
     justify-content: center;
     align-items: center;
