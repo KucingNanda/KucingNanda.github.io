@@ -1,12 +1,9 @@
-body {
-    background-color: deepskyblue;
+* {
+    margin: 0;
+    padding: 0;
 }
-.profileimage {
-    display: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.profileimage {
-    width: 300px;
+
+
+.navigasi {
+    background-color: aquamarine;
 }
