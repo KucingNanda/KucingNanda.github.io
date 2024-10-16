@@ -6,7 +6,7 @@
 
 
 .navigasi {
-    background-color: aquamarine;
+    background-color: #0042cf;
     width: 100%;
     height: 70%;
     color: black;
@@ -43,3 +43,13 @@ padding-left: 30px;
     color: blue;
     font-style: italic;
 }
+
+
+.banner {
+    background-color: #032061;
+    height: 500px;
+    text-align: center;
+}
+
+
+
