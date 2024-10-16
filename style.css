@@ -6,7 +6,7 @@
 
 
 .navigasi {
-    background-color: #0042cf;
+    background-color: #2b6eff;
     width: 100%;
     height: 70%;
     color: black;
@@ -46,10 +46,21 @@ padding-left: 30px;
 
 
 .banner {
-    background-color: #032061;
+    background-color: #003fc7;
     height: 500px;
     text-align: center;
+    color: black;
 }
 
+.banner img {
+    border-radius: 100px;
+    height: 175px;
+    border: 6px solid white;
 
+
+}
+
+.banner h1 {
+
+}
 
