@@ -23,7 +23,7 @@ padding-left: 30px;
 
 .menu {
     margin-left: 800px;
-    padding-top: 30px;
+    padding-top: 27px;
 }
 
 
@@ -55,9 +55,9 @@ padding-left: 30px;
 .banner img {
     border-radius: 100px;
     height: 150px;
-    border: 6px solid white;
+    border: 5px solid white;
     margin-top: 100px;
-
+    box-align: center
 
 }
 
