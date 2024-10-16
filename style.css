@@ -30,10 +30,16 @@ padding-left: 30px;
 .menu ul li {
     list-style: none;
     display: inline-block;
+    margin-right: 50px;
 }
 
 
 .menu ul li a {
     text-decoration: none;
     color: black;
+}
+
+.menu ul li a:hover {
+    color: blue;
+    font-style: italic;
 }
