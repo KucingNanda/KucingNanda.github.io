@@ -57,7 +57,7 @@ padding-left: 30px;
     height: 150px;
     border: 5px solid white;
     margin-top: 100px;
-    box-align: center
+    
 
 }
 
@@ -73,5 +73,19 @@ padding-left: 30px;
     width: 400px;
     border-radius: 50px;
     border: none;
+}
+
+.banner button:hover {
+    background-color: #003fc7;
+    border: 1px solid white;
+    color: white;
+}
+
+h1 span:before {
+    content: '';
+    animation: gerak infinite 8s ease;
+    transform: translateY(-50%);
+    color: black;
+    font-family: 70px;
 
 }
