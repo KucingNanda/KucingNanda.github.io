@@ -86,6 +86,19 @@ h1 span:before {
     animation: gerak infinite 8s ease;
     transform: translateY(-50%);
     color: black;
-    font-family: 70px;
+    font-family: 100px;
+}
 
+@keyframes gerak {
+    0% {
+        content: 'Selamat Datang';
+    }
+
+    50% {
+        content: 'Saya NandaSR';
+    }
+
+    100% {
+        content: 'Terimakasih sudah mampir';
+    }
 }
