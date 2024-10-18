@@ -86,7 +86,7 @@ h1 span:before {
     animation: gerak infinite 8s ease;
     transform: translateY(-50%);
     color: black;
-    font-size: 50px;
+    font-size: 30px;
 }
 
 @keyframes gerak {
@@ -95,7 +95,7 @@ h1 span:before {
     }
 
     50% {
-        content: 'Saya NandaSR';
+        content: 'Saya Nanda Septiana Ramadhani';
     }
 
     100% {
@@ -127,4 +127,12 @@ h1 span:before {
 .box-kiri:hover, .box-tengah:hover, .box-kanan:hover {
     background-color: #003fc7;
     color: white;
+}
+
+.box-pendidikan h3, p {
+
+    margin-top: 10px;
+    margin-bottom: 13px;
+    padding: 0px 20px;
+
 }
