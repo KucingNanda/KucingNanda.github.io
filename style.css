@@ -122,3 +122,9 @@ h1 span:before {
     float: left;
     border-radius: 10px;
 }
+
+
+.box-kiri:hover, .box-tengah:hover, .box-kanan:hover {
+    background-color: #003fc7;
+    color: white;
+}
