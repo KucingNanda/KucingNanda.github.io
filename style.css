@@ -47,7 +47,7 @@ padding-left: 30px;
 
 .banner {
     background-color: #003fc7;
-    height: 800px;
+    height: 500px;
     text-align: center;
     color: black;
 }
@@ -109,4 +109,16 @@ h1 span:before {
     color: #d4d4d4;
     margin-top: 30px;
     align-content: center;
+}
+
+
+.box-kiri, box-tengah, box-kanan {
+    width: 300px;
+    height: 320px;
+    background-color: #f0f0f0;
+    text-align: center;
+    padding-top: 30px;
+    padding-right: 7px;
+    margin: 70px 20px 20px 55px;
+    float: left;
 }
