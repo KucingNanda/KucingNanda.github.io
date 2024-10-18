@@ -47,7 +47,7 @@ padding-left: 30px;
 
 .banner {
     background-color: #003fc7;
-    height: 675px;
+    height: 625px;
     text-align: center;
     color: black;
 }
@@ -86,7 +86,7 @@ h1 span:before {
     animation: gerak infinite 8s ease;
     transform: translateY(-50%);
     color: black;
-    font-size: 70px;
+    font-size: 50px;
 }
 
 @keyframes gerak {
@@ -107,7 +107,7 @@ h1 span:before {
 .box-pendidikan {
     text-align: center;
     color: black;
-    margin-top: 100px;
+    margin-top: 50px;
     align-content: center;
 }
 
