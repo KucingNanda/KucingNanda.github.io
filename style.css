@@ -6,7 +6,7 @@
 
 
 .navigasi {
-    background-color: #2b6eff;
+    background-color: #6c9bff;
     width: 100%;
     color: black;
     position: fixed;
@@ -46,7 +46,7 @@ padding-left: 30px;
 
 
 .banner {
-    background-color: #003fc7;
+    background-color: #4680ff;
     height: 625px;
     text-align: center;
     color: black;
@@ -76,7 +76,7 @@ padding-left: 30px;
 }
 
 .banner button:hover {
-    background-color: #003fc7;
+    background-color: #003bbb;
     border: 1px solid white;
     color: white;
 }
@@ -125,7 +125,7 @@ h1 span:before {
 
 
 .box-kiri:hover, .box-tengah:hover, .box-kanan:hover {
-    background-color: #003fc7;
+    background-color: #003bbb;
     color: white;
 }
 
