@@ -134,5 +134,11 @@ h1 span:before {
     margin-top: 10px;
     margin-bottom: 13px;
     padding: 0px 20px;
+}
 
+.box-Lainnya {
+    text-align: center;
+    color: black;
+    margin: 0px auto;
+    margin-top: 300px;
 }
