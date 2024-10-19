@@ -147,7 +147,6 @@ h1 span:before {
 
 
 .box-Sosial {
-    width: 75px;
     margin-top: 50px;
     margin-bottom: 25px;
 }
@@ -160,5 +159,10 @@ h1 span:before {
 }
 
 .footer {
-    
+    background-color: #80b7ff;
+    width: 100px;
+    height: 40px;
+    color: black;
+    padding: 3px;
+    margin: 50px auto;
 }
