@@ -107,7 +107,7 @@ h1 span:before {
 .box-pendidikan {
     text-align: center;
     color: black;
-    margin-top: 50px;
+    margin-top: 75px;
     align-content: center;
 }
 
@@ -129,6 +129,7 @@ h1 span:before {
     color: white;
 }
 
+
 .box-pendidikan h3, p {
 
     margin-top: 10px;
@@ -136,9 +137,17 @@ h1 span:before {
     padding: 0px 20px;
 }
 
+
 .box-Lainnya {
     text-align: center;
     color: black;
     margin: 0px auto;
-    margin-top: 300px;
+    margin-top: 75px;
+}
+
+
+.box-Sosial {
+    width: 75px;
+    margin-top: 50px;
+    margin-bottom: 25px;
 }
