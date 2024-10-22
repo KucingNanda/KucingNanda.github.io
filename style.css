@@ -148,12 +148,8 @@ h1 span:before {
 
 
 .box-Sosial {
-    margin-top: 50px;
+    margin-top: 75px;
     margin-bottom: 25px;
-}
-
-
-.box-Sosial {
     text-align: center;
     color: black;
     margin: 100px;
@@ -167,4 +163,3 @@ h1 span:before {
     padding: 3px;
     margin: 50px auto;
 }
-
