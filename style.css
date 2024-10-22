@@ -6,7 +6,7 @@
 
 
 .navigasi {
-    background-color: #6c9bff;
+    background-color: #98b8ff;
     width: 100%;
     color: black;
     position: fixed;
@@ -40,7 +40,7 @@ padding-left: 30px;
 }
 
 .menu ul li a:hover {
-    color: #1212ff;
+    color: #7979fc;
     font-style: italic;
 }
 
