@@ -150,7 +150,8 @@ h1 span:before {
 .box-Sosial {
     text-align: center;
     color: black;
-    margin-top: 200px;
+    margin: 0px auto;
+    margin-top: 75px
 }
 
 .footer {
