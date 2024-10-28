@@ -150,8 +150,6 @@ h1 span:before {
 .footer {
     background-color: #80b7ff;
     text-align: center;
-    height: 40px;
+    padding: 40px;
     color: black;
-    padding: 3px;
-    margin: 50px auto;
 }
