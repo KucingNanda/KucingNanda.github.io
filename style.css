@@ -132,7 +132,6 @@ h1 span:before {
 
 
 .box-pendidikan h3, p {
-
     margin-top: 10px;
     margin-bottom: 13px;
     padding: 0px 20px;
@@ -144,4 +143,11 @@ h1 span:before {
     color: black;
     margin-top: 75px;
     align-content: center;
+}
+
+
+.box-sosial {
+    text-align: center;
+    color: black;
+    margin-top: 75px;
 }
