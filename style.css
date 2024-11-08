@@ -153,5 +153,10 @@ h1 span:before {
 }
 
 
+
+.footer{
+    background-color: gray;
+}
+
 @media screen and (min-width: 768px) {
 }
