@@ -2,20 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-dark-bg text-white font-sans;
-  margin: 0;
-  overflow-x: hidden;
+:root {
+  color-scheme: dark;
 }
 
-/* Scrollbar styling untuk vibe futuristic */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0B0F19;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0B0F19;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #8B5CF6;
   border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00F5FF;
 }

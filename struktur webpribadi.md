@@ -1,6 +1,6 @@
 # Struktur Folder WebPribadi
 
-Berikut adalah representasi struktur folder dari proyek **WebPribadi**:
+Berikut adalah representasi struktur folder dari proyek **WebPribadi** (diperbarui):
 
 ```text
 WebPribadi/
@@ -14,11 +14,14 @@ WebPribadi/
 │   ├── go.mod
 │   ├── go.sum
 │   ├── handlers/
+│   │   └── gallery.go
 │   ├── main.go
 │   ├── middleware/
+│   │   └── cors.go
 │   ├── models/
 │   │   └── model_database.go
 │   ├── routes/
+│   │   └── router.go
 │   └── services/
 ├── frontend/
 │   ├── .gitignore
