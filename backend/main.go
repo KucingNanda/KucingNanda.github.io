@@ -2,26 +2,23 @@ package main
 
 import (
 	"gamer-hub-api/database"
+	"gamer-hub-api/routes"
 	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// Hubungkan ke database
+	// 1. Inisialisasi Database
 	database.ConnectDatabase()
 
-	// Inisialisasi Gin Gonic
+	// 2. Setup Gin Engine
 	r := gin.Default()
 
-	// Route dasar untuk testing
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Gamer Hub API is Running",
-		})
-	})
+	// 3. Panggil Routes
+	routes.SetupRoutes(r)
 
-	// Jalankan server
+	// 4. Jalankan Server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
