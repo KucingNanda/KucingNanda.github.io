@@ -8,17 +8,20 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	// Pasang middleware CORS
 	r.Use(middleware.CORSMiddleware())
 
-	// Grouping API v1
 	api := r.Group("/api")
 	{
 		// Gallery Routes
 		api.GET("/gallery", handlers.GetGalleries)
-		api.POST("/gallery", handlers.CreateGallery)
 
-		// Placeholder untuk route lain (Game & Profile)
+		// Gaming Routes
+		api.GET("/games", handlers.GetGames)
+
+		// Profile Routes (Baru)
+		api.GET("/profile", handlers.GetProfile)
+		api.PUT("/profile", handlers.UpdateProfile)
+
 		api.GET("/ping", func(c *gin.Context) {
 			c.JSON(200, gin.H{"message": "pong"})
 		})
