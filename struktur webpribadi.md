@@ -5,8 +5,11 @@ Berikut adalah representasi struktur folder dari proyek **WebPribadi** (diperbar
 ```text
 WebPribadi/
 ├── .git/
+├── .gitignore
+├── README.md
 ├── backend/
 │   ├── .env
+│   ├── .env.example
 │   ├── cmd/
 │   ├── config/
 │   ├── database/
@@ -14,7 +17,9 @@ WebPribadi/
 │   ├── go.mod
 │   ├── go.sum
 │   ├── handlers/
-│   │   └── gallery.go
+│   │   ├── gallery_handler.go
+│   │   ├── game_handler.go
+│   │   └── profile_handler.go
 │   ├── main.go
 │   ├── middleware/
 │   │   └── cors.go
@@ -42,9 +47,20 @@ WebPribadi/
 │   │   │   ├── hero.png
 │   │   │   ├── react.svg
 │   │   │   └── vite.svg
+│   │   ├── components/
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   └── PageLayout.jsx
 │   │   ├── index.css
-│   │   └── main.jsx
+│   │   ├── main.jsx
+│   │   ├── pages/
+│   │   │   ├── About.jsx
+│   │   │   ├── Gallery.jsx
+│   │   │   ├── Gaming.jsx
+│   │   │   └── Home.jsx
+│   │   └── services/
+│   │       └── api.js
 │   ├── tailwind.config.js
 │   └── vite.config.js
-└── README.md
+└── struktur webpribadi.md
 ```
