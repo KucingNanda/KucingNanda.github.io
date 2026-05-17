@@ -12,6 +12,9 @@ func main() {
 	// 1. Inisialisasi Database
 	database.ConnectDatabase()
 
+	// 2. Jalankan Seeder (opsional, hanya mengisi jika tabel kosong)
+	database.SeedAll()
+
 	// 2. Setup Gin Engine
 	r := gin.Default()
 

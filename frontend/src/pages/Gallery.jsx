@@ -1,22 +1,79 @@
-import React from 'react';
-import { Image as ImageIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Image as ImageIcon, Loader2 } from 'lucide-react';
+import { apiService } from '../services/api';
 
-const Gallery = () => (
-  <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
-    <h2 className="text-5xl font-black mb-4 uppercase italic">Media <span className="text-[#8B5CF6]">Gallery</span></h2>
-    <p className="text-gray-500 mb-12">Koleksi karya visual dari PixAI dan eksperimen digital.</p>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {[1, 2, 3, 4, 5, 6].map(i => (
-        <div key={i} className="aspect-square bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group overflow-hidden relative">
-          <ImageIcon className="text-white/10 group-hover:scale-110 transition-transform" size={40} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-6 flex flex-col justify-end text-left">
-            <p className="text-[#00F5FF] font-mono text-[10px]">CHARACTER</p>
-            <h4 className="font-bold">Project Neo Art #{i}</h4>
-          </div>
+const Gallery = () => {
+  const [galleries, setGalleries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        setLoading(true);
+        const data = await apiService.getGallery();
+        setGalleries(data || []);
+      } catch (err) {
+        console.error("Failed to fetch gallery:", err);
+        setError("Gagal memuat data galeri dari server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGallery();
+  }, []);
+
+  return (
+    <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
+      <h2 className="text-5xl font-black mb-4 uppercase italic">Media <span className="text-[#8B5CF6]">Gallery</span></h2>
+      <p className="text-gray-500 mb-12">Koleksi karya visual dari PixAI dan eksperimen digital.</p>
+      
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="animate-spin text-[#8B5CF6]" size={48} />
         </div>
-      ))}
+      ) : error ? (
+        <div className="text-red-500 py-10 bg-red-500/10 rounded-2xl border border-red-500/20 max-w-md mx-auto">
+          <p>{error}</p>
+        </div>
+      ) : galleries && galleries.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {galleries.map((item) => (
+            <div key={item.id} className="aspect-square bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group overflow-hidden relative">
+              {item.image_url ? (
+                <img 
+                  src={item.image_url} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              ) : (
+                <ImageIcon className="text-white/10 group-hover:scale-110 transition-transform" size={40} />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end text-left">
+                <p className="text-[#00F5FF] font-mono text-[10px] uppercase mb-1">{item.category || 'CHARACTER'}</p>
+                <h4 className="font-bold text-white text-lg">{item.title}</h4>
+                {item.tags && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {item.tags.split(',').map((tag, idx) => (
+                      <span key={idx} className="text-xs bg-white/10 border border-white/10 px-2 py-1 rounded-md text-gray-300">
+                        {tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-gray-500 py-20 bg-white/5 rounded-2xl border border-white/10 max-w-2xl mx-auto">
+          <ImageIcon className="mx-auto mb-4 text-white/20" size={48} />
+          <p>Belum ada karya yang diunggah.</p>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 export default Gallery;

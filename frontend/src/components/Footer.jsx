@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaTwitter, FaInstagram, FaGithub } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Lock } from 'lucide-react';
 
 const Footer = () => (
   <footer className="py-12 border-t border-white/5 mt-20 relative z-10 bg-[#0B0F19]">
@@ -10,7 +12,12 @@ const Footer = () => (
         <FaInstagram size={18} className="cursor-pointer hover:text-[#8B5CF6] transition-colors" />
         <FaGithub size={18} className="cursor-pointer hover:text-white transition-colors" />
       </div>
-      <p className="text-[10px] tracking-widest font-mono uppercase text-[#00F5FF]">v1.0.0-clean</p>
+      <div className="flex items-center gap-4">
+        <Link to="/login" className="text-gray-500 hover:text-white transition-colors" title="Admin Login">
+          <Lock size={14} />
+        </Link>
+        <p className="text-[10px] tracking-widest font-mono uppercase text-[#00F5FF]">v1.0.0-clean</p>
+      </div>
     </div>
   </footer>
 );

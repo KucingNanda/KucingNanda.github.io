@@ -22,7 +22,7 @@ func GetGalleries(c *gin.Context) {
 	c.JSON(http.StatusOK, galleries)
 }
 
-// CreateGallery menambahkan item baru ke gallery (Optional untuk admin nanti)
+// CreateGallery menambahkan item baru ke gallery
 func CreateGallery(c *gin.Context) {
 	var input models.Gallery
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -32,4 +32,38 @@ func CreateGallery(c *gin.Context) {
 
 	database.DB.Create(&input)
 	c.JSON(http.StatusCreated, input)
+}
+
+// UpdateGallery memperbarui item gallery berdasarkan ID
+func UpdateGallery(c *gin.Context) {
+	id := c.Param("id")
+	var gallery models.Gallery
+
+	if err := database.DB.First(&gallery, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Gallery tidak ditemukan"})
+		return
+	}
+
+	var input models.Gallery
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	database.DB.Model(&gallery).Updates(input)
+	c.JSON(http.StatusOK, gallery)
+}
+
+// DeleteGallery menghapus item gallery berdasarkan ID
+func DeleteGallery(c *gin.Context) {
+	id := c.Param("id")
+	var gallery models.Gallery
+
+	if err := database.DB.First(&gallery, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Gallery tidak ditemukan"})
+		return
+	}
+
+	database.DB.Delete(&gallery)
+	c.JSON(http.StatusOK, gin.H{"message": "Gallery berhasil dihapus"})
 }
