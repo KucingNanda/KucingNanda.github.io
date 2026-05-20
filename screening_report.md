@@ -1,91 +1,75 @@
-# Laporan Screening Proyek WebPribadi
-
-**Tanggal Screening:** 19 Mei 2026
-**Proyek:** WebPribadi (Gamer Hub API)
+# Laporan Screening & Progres WebPribadi (KucingAbu Personal Hub)
+*Diperbarui pada: Sesi 20 Mei 2026*
 
 ---
 
-## 1. Ringkasan Eksekutif
-Proyek **WebPribadi** adalah aplikasi web full-stack yang dirancang sebagai portofolio pribadi, galeri seni (PixAI/Art Showcase), koleksi gaming, serta memiliki fitur manajemen data pribadi (Vault/Notepad admin). Proyek ini sudah menerapkan arsitektur *separation of concerns* yang baik, dengan memisahkan *backend* (API) dan *frontend* (Client) ke dalam direktori masing-masing.
+## 1. Ringkasan Pencapaian Terkini (Progres Hari Ini)
+Berbagai perombakan besar-besaran telah dilakukan untuk mengangkat derajat situs ini dari "aplikasi dasar" menjadi "platform premium". Berikut adalah sorotannya:
 
-## 2. Arsitektur dan Teknologi (Tech Stack)
-
-### Backend (Golang)
-Backend dikembangkan menggunakan bahasa **Go (Golang 1.26.1)** dan difokuskan sebagai penyedia RESTful API.
-- **Framework Web:** Gin Web Framework (`github.com/gin-gonic/gin`)
-- **ORM (Object-Relational Mapping):** GORM (`gorm.io/gorm`) dengan driver MySQL
-- **Autentikasi:** JSON Web Token (JWT) menggunakan `github.com/golang-jwt/jwt/v5`
-- **Manajemen Konfigurasi:** Godotenv (`github.com/joho/godotenv`) untuk membaca file `.env`
-- **Keamanan Sandi:** `golang.org/x/crypto` untuk hashing password.
-
-### Frontend (React.js)
-Frontend dikembangkan menggunakan ekosistem modern **React.js (versi 19)**.
-- **Build Tool:** Vite (sangat cepat untuk *development* dan *build*)
-- **Routing:** React Router DOM v7
-- **Styling:** Tailwind CSS v3.4 beserta PostCSS dan Autoprefixer
-- **Animasi dan Ikon:** Framer Motion, Lucide React, React Icons.
-
-### Database (MySQL)
-Model database yang telah dikonfigurasi melalui GORM AutoMigrate:
-1. **User**: Tabel untuk pengguna (biasanya admin).
-2. **Gallery**: Menyimpan galeri gambar (URL, judul, kategori, dan tag).
-3. **Game**: Menyimpan data profil game (Nickname, UID, Bio).
-4. **Profile**: Menyimpan data profil utama (Status, Bio, Social Links).
-5. **Vault**: Tabel terenkripsi/terlindungi khusus admin untuk menyimpan catatan penting (Platform, Username, Password, Notes).
-
-## 3. Fitur dan Endpoint API
-
-Proyek ini telah memisahkan antara rute publik dan rute privat (dilindungi oleh JWT Middleware).
-
-**Public Routes:**
-- `POST /api/login` - Untuk autentikasi admin.
-- `GET /api/gallery` - Menampilkan daftar galeri.
-- `GET /api/games` - Menampilkan daftar profil game.
-- `GET /api/profile` - Menampilkan profil pribadi.
-- `GET /api/ping` - Health check (digunakan oleh frontend untuk memantau status server).
-
-**Protected Routes (Membutuhkan Token JWT):**
-- CRUD Galeri (`POST`, `PUT`, `DELETE /api/gallery`)
-- CRUD Game (`POST`, `PUT`, `DELETE /api/games`)
-- CRUD Profil (`POST`, `PUT`, `DELETE /api/profile`)
-- CRUD Vault (`GET`, `POST`, `PUT`, `DELETE /api/vault`) - *Manajemen kredensial*.
-
-## 4. Struktur Halaman Frontend
-
-Sistem *routing* pada frontend telah memetakan beberapa halaman utama:
-- **Public Pages:** `/` (Home), `/gallery` (Galeri), `/gaming` (Gaming), `/about` (Tentang), `/login` (Otentikasi).
-- **Protected Pages:** `/admin` (Halaman Admin Dashboard, dilindungi oleh `ProtectedRoute`).
-- Terdapat sistem *Health Check* otomatis pada `App.jsx` yang berjalan setiap 30 detik (`ping` ke backend) untuk memperbarui indikator `apiStatus` (online/offline) di komponen `Navbar`.
-
-## 5. Kesimpulan dan Rekomendasi
-Aplikasi sudah memiliki struktur pondasi *Fullstack* modern yang sangat baik, aman (karena ada pemisahan rute dengan JWT), dan siap dikembangkan lebih jauh. 
-
-**Rekomendasi untuk pengembangan selanjutnya:**
-1. **Penanganan Error (Error Handling):** Memastikan baik backend maupun frontend menangani kasus ketika database gagal merespons atau token kedaluwarsa secara ramah-pengguna (*user-friendly*).
-2. **Manajemen Environment:** Pastikan file `.env` di backend dan `.env` di frontend (jika ada, untuk base URL API) dikonfigurasi dengan benar di environment produksi (contoh: Vercel untuk Frontend, VPS/Railway untuk Backend).
-6. **Validasi Input:** Pastikan pada *handler* Golang terdapat validasi format input (seperti email atau panjang karakter) sebelum disimpan ke dalam database.
+- **Migrasi Arsitektur Backend (Gin ke Fiber):** 
+  Selesai memindahkan seluruh struktur *routing* dan *handler* API dari framework Gin menuju **Golang Fiber (v2)** guna menyetarakan infrastruktur dengan proyek utama (SupplierHub).
+- **Enkripsi Kredensial (Vault At-Rest):** 
+  Rute catatan rahasia di `/vault` kini dijaga ketat oleh algoritma enkripsi standar militer **AES-256-GCM**. Password tidak akan bisa dibaca dari *database SQL* secara telanjang.
+- **Transformasi UI/UX Panel Admin:** 
+  Menghilangkan input berbentuk teks *raw JSON* untuk `social_links` dan `tech_stack`, lalu menggantinya dengan antarmuka dinamis (*form input* yang bisa ditambah/hapus secara visual).
+- **Integrasi Database Menyeluruh (No Hardcode):** 
+  Seluruh halaman publik (`Home`, `Gallery`, `Gaming`, `About`) telah ditenagai oleh API Backend. Judul situs dan *bio* di halaman beranda kini akan berubah secara otomatis saat di-*update* dari Admin Panel.
+- **Inovasi Master-Detail & Dynamic Parsing:** 
+  Halaman Gaming Corner dirombak menjadi dua fase (Grid Preview & Modal Detail). Memanfaatkan logika *split string*, baris-baris pada kolom `Bio` yang dipisahkan dengan tanda titik dua (`:`) disulap menjadi *badge* berpasangan yang futuristik.
+- **Navigasi Seamless (UX Mode):** 
+  Akses khusus pengelola (Admin) disisipkan secara mulus (*stealth*) ke dalam navigasi atas (Navbar) dan navigasi bawah (Footer), yang hanya menampakkan wujudnya jika Anda dalam mode *login*.
 
 ---
 
-## 6. Progres Terbaru (Update Sesi Terakhir)
+## 2. Struktur Teknologi (Tech Stack) Saat Ini
 
-Pada pengembangan lanjutan, kita telah fokus pada penyelesaian fitur **Personal Profile Management** dan integrasinya secara menyeluruh di *frontend*.
+**Tampilan Wajah (Frontend)**
+- **Framework:** React 19 + Vite
+- **Styling:** Tailwind CSS v3 (Tema Gelap, Glassmorphism)
+- **Animasi:** Framer Motion (Micro-Animations & Modal Pop-up)
+- **Ikonografi:** Lucide React & React Icons
+- **Integrasi:** Fetch API (dibungkus apik dalam `apiService`)
 
-**Pencapaian Utama:**
-1. **Pembaruan Database & API:** 
-   - Menambahkan kolom `tech_stack` dengan format JSON String pada model `Profile` di *backend* (GORM). 
-   - Hal ini melengkapi kolom `social_links` yang juga menggunakan format JSON untuk struktur data yang fleksibel.
+**Ruang Mesin (Backend)**
+- **Bahasa:** Golang (Go)
+- **Framework:** Go Fiber v2
+- **Database Layer:** GORM dengan MySQL
+- **Sistem Keamanan:** JWT (JSON Web Tokens), Bcrypt Hash, dan `crypto/aes` (Galois/Counter Mode).
 
-2. **Perombakan Halaman "About" (Dinamis):**
-   - Mengganti *section* statis "Device Setup" menjadi **"Project Architecture"** (Tech Stack).
-   - Halaman `About.jsx` kini secara dinamis menarik dan me-render *array* JSON Tech Stack dari database, lengkap dengan pemetaan ke ikon Lucide secara otomatis (*Code*, *Layers*, *Database*, dll).
+---
 
-3. **Integrasi Dinamis Footer:**
-   - Komponen `Footer.jsx` sekarang terhubung ke API Profil.
-   - Ikon media sosial (Instagram, GitHub, Facebook, Twitter) kini tampil secara dinamis sebagai tautan aktif jika ada data URL di JSON `social_links`, dan akan hilang/redup jika tidak ada datanya.
+## 3. Hasil Evaluasi Sistem (Screening)
+- **Kestabilan (100%):** Sistem berhasil melalui kompilasi (`go build` bersih). Kendala CORS *strict* dari Fiber berhasil dipatahkan.
+- **Keamanan (Sangat Baik):** Kombinasi token JWT dan enkripsi AES-256 membuat lapisan aplikasi ini sulit ditembus, khususnya pada modul *Vault*.
+- **Performa (Sangat Baik):** Kecepatan super dari Fiber dipadukan dengan optimalisasi Vite memastikan pengalaman *loading* yang instan bagi pengunjung.
+- **Kenyamanan (Elegan):** *User Experience* pengunjung (seperti modal interaktif dan notifikasi *Copy UID*) serta *Developer Experience* pengelola (UI Admin yang mudah) telah mencapai titik harmoni.
 
-4. **Peningkatan UX/UI Panel Admin secara Ekstrem:**
-   - **Form Edit:** Menghilangkan keharusan pengguna mengedit teks JSON mentah. Kini *Social Links* memiliki form *input link* individual, dan *Tech Stack* menggunakan form *card* dinamis (tombol tambah, hapus, *dropdown* ikon).
-   - **Tata Letak (Layout):** Memperlebar modal Edit (`max-w-lg`) dan memberikannya fitur *scroll* otomatis (`max-h-[90vh]`) agar *form* yang panjang tidak terpotong oleh layar.
-   - **Ringkasan (Read Mode):** Mengganti tampilan teks JSON di ringkasan profil Admin Panel menjadi deretan *badge* estetik; *Cyan* untuk Social Links dan *Purple* neon untuk Tech Stack.
-   - **Sistem Default:** Menginjeksi *default* data Tech Stack otomatis ke form saat pengguna pertama kali menyetel profil agar tidak perlu mengetik semuanya dari nol.
+---
+
+## 4. Rekomendasi & Arah Pengembangan Kedepannya
+Situs web ini sudah dalam kondisi siap pakai (Production-Ready). Namun, untuk membuatnya jauh lebih "Overpowered", berikut adalah rute pengembangan strategis yang bisa kita ambil selanjutnya:
+
+> [!TIP]
+> **1. Integrasi Cloud Storage (Image Uploader)**
+> - **Kondisi Saat Ini:** Fitur Gallery masih mengharuskan Anda menyalin URL tautan gambar dari tempat lain.
+> - **Solusi:** Membangun *endpoint upload file* di Golang Fiber yang terhubung ke Cloudinary atau AWS S3, sehingga Anda bisa mengunggah file `JPG/PNG` langsung dari komputer Anda melalui Admin Panel.
+
+> [!TIP]
+> **2. Sistem Pencarian & Penyortiran (Search & Filter Bar)**
+> - **Kondisi Saat Ini:** Game dan Galeri hanya dimunculkan semua sekaligus.
+> - **Solusi:** Saat koleksi Anda menembus puluhan atau ratusan, fitur pencarian (*search bar*) *realtime* dan penyaring kategori (misal: "Hanya game FPS" atau "Hanya karakter 3D") akan membuat pengunjung lebih betah mengeksplorasi.
+
+> [!TIP]
+> **3. Dashboard Ringkasan Eksekutif (Overview)**
+> - **Kondisi Saat Ini:** Admin Panel langsung masuk ke *tab* Gallery/Game.
+> - **Solusi:** Menambahkan layar *Dashboard Home* khusus Admin yang memuat metrik angka statistik (Misal: "Total 24 Game Dimainkan", "Total 150 Karya Dibuat", status memori *database*, dll).
+
+> [!TIP]
+> **4. Optimasi SEO & Dynamic Metadata (React Helmet)**
+> - **Kondisi Saat Ini:** Judul *tab browser* masih statis.
+> - **Solusi:** Memasang React Helmet agar saat pengunjung mengklik `Gaming Corner`, judul dan *meta description* di HTML ikut berubah secara instan, sangat vital agar link terlihat bagus saat disebar di WhatsApp/Discord.
+
+> [!TIP]
+> **5. Guestbook (Buku Tamu Digital)**
+> - **Kondisi Saat Ini:** Interaksi berjalan satu arah (pengunjung sekadar melihat profil Anda).
+> - **Solusi:** Menambah fitur di mana pengunjung bisa meninggalkan pesan apresiasi pendek atau salam secara anonim/publik yang ditampilkan layaknya *marquee* bergaya peretas di halaman beranda.

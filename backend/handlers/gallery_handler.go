@@ -3,6 +3,7 @@ package handlers
 import (
 	"gamer-hub-api/database"
 	"gamer-hub-api/models"
+	"gamer-hub-api/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,9 +22,28 @@ func GetGalleries(c *fiber.Ctx) error {
 
 // CreateGallery menambahkan item baru ke gallery
 func CreateGallery(c *fiber.Ctx) error {
+	// Fallback ke BodyParser jika bukan form-data (untuk kompatibilitas)
 	var input models.Gallery
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	if string(c.Request().Header.ContentType()) == "application/json" {
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+	} else {
+		// Parse dari form-data
+		input.Title = c.FormValue("title")
+		input.Category = c.FormValue("category")
+		input.Tags = c.FormValue("tags")
+		input.ImageURL = c.FormValue("image_url") // Jika dikirim teks
+	}
+
+	// Handle Upload Image jika ada file fisik
+	file, err := c.FormFile("image")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar: " + errUpload.Error()})
+		}
+		input.ImageURL = secureURL
 	}
 
 	database.DB.Create(&input)
@@ -39,12 +59,35 @@ func UpdateGallery(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Gallery tidak ditemukan"})
 	}
 
-	var input models.Gallery
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	// Proses pembaruan data
+	if string(c.Request().Header.ContentType()) == "application/json" {
+		var input models.Gallery
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		// Update secara spesifik
+		if input.Title != "" { gallery.Title = input.Title }
+		if input.Category != "" { gallery.Category = input.Category }
+		if input.Tags != "" { gallery.Tags = input.Tags }
+		if input.ImageURL != "" { gallery.ImageURL = input.ImageURL }
+	} else {
+		if title := c.FormValue("title"); title != "" { gallery.Title = title }
+		if category := c.FormValue("category"); category != "" { gallery.Category = category }
+		if tags := c.FormValue("tags"); tags != "" { gallery.Tags = tags }
+		if imgURL := c.FormValue("image_url"); imgURL != "" { gallery.ImageURL = imgURL }
 	}
 
-	database.DB.Model(&gallery).Updates(input)
+	// Tangani pembaruan gambar fisik jika dilampirkan
+	file, err := c.FormFile("image")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar: " + errUpload.Error()})
+		}
+		gallery.ImageURL = secureURL
+	}
+
+	database.DB.Save(&gallery)
 	return c.Status(fiber.StatusOK).JSON(gallery)
 }
 
