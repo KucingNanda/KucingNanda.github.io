@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Image as ImageIcon, Gamepad2, User, Menu, X } from 'lucide-react';
+import { Home, Image as ImageIcon, Gamepad2, User, Menu, X, Settings } from 'lucide-react';
 
 const Navbar = ({ apiStatus }) => {
     const location = useLocation();
@@ -23,7 +23,7 @@ const Navbar = ({ apiStatus }) => {
                         <span className="font-bold text-xl italic text-white">G</span>
                     </div>
                     <span className="font-bold text-xl tracking-tighter text-white">
-                        GAMER<span className="text-[#00F5FF]">HUB</span>
+                        KUCINGABU<span className="text-[#00F5FF]">HUB</span>
                     </span>
                 </Link>
 
@@ -39,6 +39,14 @@ const Navbar = ({ apiStatus }) => {
                             {link.icon} {link.name}
                         </Link>
                     ))}
+                    {localStorage.getItem('token') && (
+                        <Link
+                            to="/admin"
+                            className={`flex items-center gap-2 text-sm font-bold transition-colors ${location.pathname === '/admin' ? 'text-[#8B5CF6]' : 'text-[#8B5CF6]/70 hover:text-[#8B5CF6]'}`}
+                        >
+                            <Settings size={18} /> Admin Panel
+                        </Link>
+                    )}
                 </div>
 
                 {/* API Status Indicator */}
@@ -72,6 +80,15 @@ const Navbar = ({ apiStatus }) => {
                                 {link.icon} {link.name}
                             </Link>
                         ))}
+                        {localStorage.getItem('token') && (
+                            <Link
+                                to="/admin"
+                                onClick={() => setIsOpen(false)}
+                                className="flex items-center gap-4 py-3 font-bold text-[#8B5CF6] hover:text-[#7c4dff]"
+                            >
+                                <Settings size={18} /> Admin Panel
+                            </Link>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -3,60 +3,53 @@ package handlers
 import (
 	"gamer-hub-api/database"
 	"gamer-hub-api/models"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 // GetProfile mengambil data profil user
-func GetProfile(c *gin.Context) {
+func GetProfile(c *fiber.Ctx) error {
 	var profile models.Profile
 	// Mengambil profil pertama (karena ini personal hub)
 	result := database.DB.First(&profile)
 	if result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Profil belum diatur"})
-		return
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Profil belum diatur"})
 	}
-	c.JSON(http.StatusOK, profile)
+	return c.Status(fiber.StatusOK).JSON(profile)
 }
 
 // CreateProfile membuat data profil baru
-func CreateProfile(c *gin.Context) {
+func CreateProfile(c *fiber.Ctx) error {
 	var input models.Profile
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 	database.DB.Create(&input)
-	c.JSON(http.StatusCreated, input)
+	return c.Status(fiber.StatusCreated).JSON(input)
 }
 
 // UpdateProfile untuk memperbarui data profil
-func UpdateProfile(c *gin.Context) {
+func UpdateProfile(c *fiber.Ctx) error {
 	var input models.Profile
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	var profile models.Profile
 	if err := database.DB.First(&profile).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Profil tidak ditemukan"})
-		return
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Profil tidak ditemukan"})
 	}
 	
 	database.DB.Model(&profile).Updates(input)
-	c.JSON(http.StatusOK, profile)
+	return c.Status(fiber.StatusOK).JSON(profile)
 }
 
 // DeleteProfile menghapus data profil
-func DeleteProfile(c *gin.Context) {
+func DeleteProfile(c *fiber.Ctx) error {
 	var profile models.Profile
 	if err := database.DB.First(&profile).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Profil tidak ditemukan"})
-		return
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Profil tidak ditemukan"})
 	}
 
 	database.DB.Delete(&profile)
-	c.JSON(http.StatusOK, gin.H{"message": "Profil berhasil dihapus"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Profil berhasil dihapus"})
 }

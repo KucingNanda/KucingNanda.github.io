@@ -5,7 +5,7 @@ import (
 	"gamer-hub-api/routes"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
@@ -15,16 +15,16 @@ func main() {
 	// 2. Jalankan Seeder (opsional, hanya mengisi jika tabel kosong)
 	database.SeedAll()
 
-	// 2. Setup Gin Engine
-	r := gin.Default()
+	// 2. Setup Fiber App
+	app := fiber.New()
 
 	// 3. Panggil Routes
-	routes.SetupRoutes(r)
+	routes.SetupRoutes(app)
 
 	// 4. Jalankan Server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	r.Run(":" + port)
+	app.Listen(":" + port)
 }

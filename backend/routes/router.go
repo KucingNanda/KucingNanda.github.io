@@ -4,38 +4,41 @@ import (
 	"gamer-hub-api/handlers"
 	"gamer-hub-api/middleware"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-func SetupRoutes(r *gin.Engine) {
-	r.Use(middleware.CORSMiddleware())
+func SetupRoutes(app *fiber.App) {
+	app.Use(middleware.CORSMiddleware())
 
-	api := r.Group("/api")
-	{
-		// Public Routes
-		api.POST("/login", handlers.Login)
-		api.GET("/gallery", handlers.GetGalleries)
-		api.GET("/games", handlers.GetGames)
-		api.GET("/profile", handlers.GetProfile)
-		api.GET("/ping", func(c *gin.Context) {
-			c.JSON(200, gin.H{"message": "pong"})
-		})
+	api := app.Group("/api")
+	
+	// Public Routes
+	api.Post("/login", handlers.Login)
+	api.Get("/gallery", handlers.GetGalleries)
+	api.Get("/games", handlers.GetGames)
+	api.Get("/profile", handlers.GetProfile)
+	api.Get("/ping", func(c *fiber.Ctx) error {
+		return c.Status(200).JSON(fiber.Map{"message": "pong"})
+	})
 
-		// Protected Routes
-		protected := api.Group("/")
-		protected.Use(middleware.AuthMiddleware())
-		{
-			protected.POST("/gallery", handlers.CreateGallery)
-			protected.PUT("/gallery/:id", handlers.UpdateGallery)
-			protected.DELETE("/gallery/:id", handlers.DeleteGallery)
+	// Protected Routes
+	protected := api.Group("/")
+	protected.Use(middleware.AuthMiddleware())
+	
+	protected.Post("/gallery", handlers.CreateGallery)
+	protected.Put("/gallery/:id", handlers.UpdateGallery)
+	protected.Delete("/gallery/:id", handlers.DeleteGallery)
 
-			protected.POST("/games", handlers.CreateGame)
-			protected.PUT("/games/:id", handlers.UpdateGame)
-			protected.DELETE("/games/:id", handlers.DeleteGame)
+	protected.Post("/games", handlers.CreateGame)
+	protected.Put("/games/:id", handlers.UpdateGame)
+	protected.Delete("/games/:id", handlers.DeleteGame)
 
-			protected.POST("/profile", handlers.CreateProfile)
-			protected.PUT("/profile", handlers.UpdateProfile)
-			protected.DELETE("/profile", handlers.DeleteProfile)
-		}
-	}
+	protected.Post("/profile", handlers.CreateProfile)
+	protected.Put("/profile", handlers.UpdateProfile)
+	protected.Delete("/profile", handlers.DeleteProfile)
+
+	protected.Get("/vault", handlers.GetVaults)
+	protected.Post("/vault", handlers.CreateVault)
+	protected.Put("/vault/:id", handlers.UpdateVault)
+	protected.Delete("/vault/:id", handlers.DeleteVault)
 }

@@ -60,9 +60,9 @@ func SeedGames() {
 	DB.Model(&models.Game{}).Count(&count)
 	if count == 0 {
 		games := []models.Game{
-			{GameName: "Genshin Impact", UID: "800000000", Description: "Eksplorasi Teyvat", FavoriteCharacter: "Furina", Progress: 85},
-			{GameName: "Honkai: Star Rail", UID: "800000001", Description: "Perjalanan Astral Express", FavoriteCharacter: "Kafka", Progress: 90},
-			{GameName: "Zenless Zone Zero", UID: "800000002", Description: "Menjelajah Hollow", FavoriteCharacter: "Nicole", Progress: 50},
+			{GameName: "Genshin Impact", Nickname: "NandaSR", UID: "800000000", Bio: "Eksplorasi Teyvat"},
+			{GameName: "Honkai: Star Rail", Nickname: "NandaSR", UID: "800000001", Bio: "Perjalanan Astral Express"},
+			{GameName: "Mobile Legends: Bang Bang", Nickname: "NandaSR", UID: "800000002", Bio: "Push Rank Mythic"},
 		}
 		if err := DB.Create(&games).Error; err != nil {
 			log.Println("Gagal seed games:", err)

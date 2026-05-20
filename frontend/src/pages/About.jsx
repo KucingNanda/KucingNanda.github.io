@@ -1,9 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { User, Monitor, Cpu, Zap, HardDrive, Loader2 } from 'lucide-react';
+import { User, Code, Layers, Palette, Server, Database, Shield, Wand2, Loader2, Cpu, Monitor, FileCode2, Terminal, PenTool, LayoutTemplate, Smartphone } from 'lucide-react';
 import { apiService } from '../services/api';
+
+// Mapping string icon ke komponen lucide-react
+const IconMap = {
+  "Code": <Code size={20} />,
+  "Layers": <Layers size={20} />,
+  "Palette": <Palette size={20} />,
+  "Server": <Server size={20} />,
+  "Database": <Database size={20} />,
+  "Shield": <Shield size={20} />,
+  "Wand2": <Wand2 size={20} />,
+  "Cpu": <Cpu size={20} />,
+  "Monitor": <Monitor size={20} />,
+  "FileCode2": <FileCode2 size={20} />,
+  "Terminal": <Terminal size={20} />,
+  "PenTool": <PenTool size={20} />,
+  "LayoutTemplate": <LayoutTemplate size={20} />,
+  "Smartphone": <Smartphone size={20} />
+};
+
+// Default fallback jika DB kosong
+const defaultStack = [
+  { category: "Frontend Core", stack: "React 19 + Vite", desc: "Rendering UI yang sangat cepat dan reaktif.", icon: "Layers" },
+  { category: "Styling System", stack: "Tailwind CSS v3", desc: "Desain utilitas responsif dengan glassmorphism.", icon: "Palette" },
+  { category: "Backend Engine", stack: "Golang + Gin", desc: "Arsitektur REST API dengan performa maksimal.", icon: "Server" },
+  { category: "Data Layer", stack: "MySQL + GORM", desc: "Manajemen relasi database yang aman & otomatis.", icon: "Database" },
+  { category: "Security", stack: "JWT Auth & Bcrypt", desc: "Sistem enkripsi sandi dan token untuk rute Admin.", icon: "Shield" },
+  { category: "Micro-Animations", stack: "Framer Motion", desc: "Transisi interaktif dan pergerakan elemen dinamis.", icon: "Wand2" }
+];
 
 const About = () => {
   const [profile, setProfile] = useState(null);
+  const [techStack, setTechStack] = useState(defaultStack);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,10 +41,25 @@ const About = () => {
       try {
         setLoading(true);
         const data = await apiService.getProfile();
+        let profileData = null;
         if (Array.isArray(data) && data.length > 0) {
-          setProfile(data[0]);
+          profileData = data[0];
         } else if (data && !Array.isArray(data)) {
-          setProfile(data);
+          profileData = data;
+        }
+
+        if (profileData) {
+          setProfile(profileData);
+          if (profileData.tech_stack) {
+            try {
+              const parsed = JSON.parse(profileData.tech_stack);
+              if (Array.isArray(parsed)) {
+                setTechStack(parsed);
+              }
+            } catch (e) {
+              console.error("tech_stack bukan format JSON Array yang valid");
+            }
+          }
         }
       } catch (err) {
         console.error("Failed to fetch profile:", err);
@@ -54,19 +98,19 @@ const About = () => {
           </div>
 
           <div className="lg:col-span-2 space-y-6">
-            <h3 className="text-xl font-bold flex items-center gap-3"><Monitor className="text-[#00F5FF]" /> Device Setup</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { l: "CPU", v: "Ryzen 7 5800X", i: <Cpu size={18} /> },
-                { l: "GPU", v: "RTX 3070 Ti", i: <Zap size={18} /> },
-                { l: "RAM", v: "32GB DDR4", i: <HardDrive size={18} /> },
-                { l: "Display", v: "27\" 165Hz", i: <Monitor size={18} /> }
-              ].map((s, i) => (
-                <div key={i} className="p-5 bg-white/5 border border-white/5 rounded-2xl flex items-center gap-4 hover:border-[#00F5FF]/30 transition-colors">
-                  <div className="text-[#00F5FF]">{s.i}</div>
+            <h3 className="text-2xl font-bold flex items-center gap-3"><Code className="text-[#00F5FF]" /> Project Architecture</h3>
+            <p className="text-gray-400 text-sm">Personal Hub ini dirancang dari awal menggunakan kombinasi teknologi Fullstack modern untuk menghadirkan performa secepat kilat dan antarmuka cyberpunk/futuristik.</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              {techStack.map((item, i) => (
+                <div key={i} className="p-5 bg-white/5 border border-white/10 rounded-2xl flex items-start gap-4 hover:bg-white/10 hover:border-[#00F5FF]/40 transition-all duration-300 group cursor-default">
+                  <div className="text-[#00F5FF] mt-1 bg-[#00F5FF]/10 p-2.5 rounded-xl group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(0,245,255,0.1)]">
+                    {IconMap[item.icon] || <Code size={20} />}
+                  </div>
                   <div>
-                    <p className="text-[10px] text-gray-500 uppercase font-mono">{s.l}</p>
-                    <p className="font-bold text-sm">{s.v}</p>
+                    <p className="text-[10px] text-[#8B5CF6] uppercase font-mono tracking-widest mb-1">{item.category}</p>
+                    <p className="font-bold text-base text-white">{item.stack}</p>
+                    <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
