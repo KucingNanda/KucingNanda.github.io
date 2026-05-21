@@ -13,7 +13,7 @@ func SeedAll() {
 	SeedUser()
 	SeedProfile()
 	SeedGames()
-	SeedGalleries()
+	// SeedGalleries() // Dinonaktifkan karena galeri akan diisi gambar asli
 	fmt.Println("✅ Proses Seeding Selesai")
 }
 

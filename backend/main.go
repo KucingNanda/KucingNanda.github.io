@@ -13,7 +13,7 @@ func main() {
 	database.ConnectDatabase()
 
 	// 2. Jalankan Seeder (opsional, hanya mengisi jika tabel kosong)
-	database.SeedAll()
+	// database.SeedAll() // Dinonaktifkan karena sudah menggunakan data asli
 
 	// 2. Setup Fiber App
 	app := fiber.New()

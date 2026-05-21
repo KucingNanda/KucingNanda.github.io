@@ -64,3 +64,7 @@ WebPribadi/
 │   └── vite.config.js
 └── struktur webpribadi.md
 ```
+
+
+UPDATE vaults SET id = 1 WHERE id = 4;
+ALTER TABLE vaults AUTO_INCREMENT = 2;

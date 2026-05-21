@@ -30,6 +30,8 @@ const Admin = () => {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const navigate = useNavigate();
 
@@ -86,13 +88,15 @@ const Admin = () => {
 
   const openModal = (item = null) => {
     setIsEditing(!!item);
+    setSelectedFile(null);
+    setPreviewUrl(null);
     if (item) {
       setFormData({
         ...item,
         tech_stack: (activeTab === 'profile' && (!item.tech_stack || item.tech_stack === "[]" || item.tech_stack === "")) ? defaultTechStack : item.tech_stack
       });
     } else {
-      if (activeTab === 'gallery') setFormData({ title: '', image_url: '', category: 'CHARACTER', tags: '' });
+      if (activeTab === 'gallery') setFormData({ title: '', image_url: '', info: 'AI Art (PixAI)', category: 'Lainnya', tags: '' });
       if (activeTab === 'games') setFormData({ game_name: '', nickname: '', uid: '', bio: '' });
       if (activeTab === 'vault') setFormData({ platform: '', username: '', password: '', notes: '' });
       if (activeTab === 'profile') setFormData({ nickname: '', bio: '', current_status: '', social_links: '', tech_stack: defaultTechStack });
@@ -103,11 +107,21 @@ const Admin = () => {
   const closeModal = () => {
     setShowModal(false);
     setFormData({});
+    setSelectedFile(null);
+    setPreviewUrl(null);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   // UX Handlers for JSON Profile Data
@@ -150,8 +164,19 @@ const Admin = () => {
     setSubmitLoading(true);
     try {
       if (activeTab === 'gallery') {
-        if (isEditing) await apiService.updateGallery(formData.id, formData);
-        else await apiService.createGallery(formData);
+        const payload = new FormData();
+        payload.append('title', formData.title || '');
+        payload.append('info', formData.info || 'AI Art (PixAI)');
+        payload.append('category', formData.category || 'Lainnya');
+        payload.append('tags', formData.tags || '');
+        if (selectedFile) {
+            payload.append('image', selectedFile);
+        } else if (formData.image_url) {
+            payload.append('image_url', formData.image_url);
+        }
+        
+        if (isEditing) await apiService.updateGallery(formData.id, payload);
+        else await apiService.createGallery(payload);
       } else if (activeTab === 'games') {
         if (isEditing) await apiService.updateGame(formData.id, formData);
         else await apiService.createGame(formData);
@@ -334,18 +359,55 @@ const Admin = () => {
                     <input type="text" name="title" value={formData.title || ''} onChange={handleInputChange} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-400 mb-1">Image URL</label>
-                    <input type="url" name="image_url" value={formData.image_url || ''} onChange={handleInputChange} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                    <label className="block text-sm text-gray-400 mb-2">Upload Image</label>
+                    
+                    {/* Big Preview */}
+                    {(previewUrl || formData.image_url) && (
+                      <div className="w-full h-64 rounded-xl overflow-hidden mb-4 border border-white/10 bg-black relative">
+                        <img src={previewUrl || formData.image_url} alt="Preview" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-4">
+                      {!(previewUrl || formData.image_url) && (
+                        <div className="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                          <span className="text-[10px] text-gray-500">No Image</span>
+                        </div>
+                      )}
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange} 
+                        required={!isEditing} 
+                        className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#8B5CF6]/10 file:text-[#8B5CF6] hover:file:bg-[#8B5CF6]/20 transition-colors" 
+                      />
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm text-gray-400 mb-1">Category</label>
-                      <input type="text" name="category" value={formData.category || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                      <label className="block text-sm text-gray-400 mb-1">Tipe Karya</label>
+                      <select name="info" value={formData.info || 'AI Art (PixAI)'} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]">
+                        <option value="AI Art (PixAI)" className="bg-[#0B0F19]">AI Art (PixAI)</option>
+                        <option value="Art" className="bg-[#0B0F19]">Art</option>
+                        <option value="Cosplay" className="bg-[#0B0F19]">Cosplay</option>
+                      </select>
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-1">Tags (comma separated)</label>
-                      <input type="text" name="tags" value={formData.tags || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                      <label className="block text-sm text-gray-400 mb-1">Fandom / Game</label>
+                      <select name="category" value={formData.category || 'Lainnya'} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]">
+                        <option value="Genshin Impact" className="bg-[#0B0F19]">Genshin Impact</option>
+                        <option value="Honkai: Star Rail" className="bg-[#0B0F19]">Honkai: Star Rail</option>
+                        <option value="Zenless Zone Zero" className="bg-[#0B0F19]">Zenless Zone Zero</option>
+                        <option value="Wuthering Waves" className="bg-[#0B0F19]">Wuthering Waves</option>
+                        <option value="Mobile Legends" className="bg-[#0B0F19]">Mobile Legends</option>
+                        <option value="Original Character" className="bg-[#0B0F19]">Original Character (OC)</option>
+                        <option value="Lainnya" className="bg-[#0B0F19]">Lainnya...</option>
+                      </select>
                     </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Tags (comma separated)</label>
+                    <input type="text" name="tags" value={formData.tags || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
                   </div>
                 </>
               )}

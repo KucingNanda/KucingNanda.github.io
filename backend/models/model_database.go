@@ -11,7 +11,8 @@ type Gallery struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
 	Title     string         `gorm:"type:varchar(255);not null" json:"title"`
 	ImageURL  string         `gorm:"type:text;not null" json:"image_url"`
-	Category  string         `gorm:"type:varchar(100)" json:"category"`
+	Info      string         `gorm:"type:varchar(100)" json:"info"` // Menyimpan AI Art, Art, Cosplay
+	Category  string         `gorm:"type:varchar(100)" json:"category"` // Menyimpan Character, Skenario, dll
 	Tags      string         `gorm:"type:varchar(255)" json:"tags"` // Disimpan sebagai string CSV
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

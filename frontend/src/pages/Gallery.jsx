@@ -6,6 +6,9 @@ const Gallery = () => {
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const filters = ['All', 'AI Art (PixAI)', 'Art', 'Cosplay'];
 
   useEffect(() => {
     const fetchGallery = async () => {
@@ -24,11 +27,28 @@ const Gallery = () => {
     fetchGallery();
   }, []);
 
+  const filteredGalleries = galleries.filter(item => {
+    if (activeFilter === 'All') return true;
+    return item.info?.toLowerCase() === activeFilter.toLowerCase();
+  });
+
   return (
     <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
       <h2 className="text-5xl font-black mb-4 uppercase italic">Media <span className="text-[#8B5CF6]">Gallery</span></h2>
-      <p className="text-gray-500 mb-12">Koleksi karya visual dari PixAI dan eksperimen digital.</p>
+      <p className="text-gray-500 mb-8">Koleksi karya visual dari PixAI dan eksperimen digital.</p>
       
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {filters.map(filter => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${activeFilter === filter ? 'bg-[#8B5CF6] text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'}`}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center py-20">
           <Loader2 className="animate-spin text-[#8B5CF6]" size={48} />
@@ -37,10 +57,10 @@ const Gallery = () => {
         <div className="text-red-500 py-10 bg-red-500/10 rounded-2xl border border-red-500/20 max-w-md mx-auto">
           <p>{error}</p>
         </div>
-      ) : galleries && galleries.length > 0 ? (
+      ) : filteredGalleries.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {galleries.map((item) => (
-            <div key={item.id} className="aspect-square bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group overflow-hidden relative">
+          {filteredGalleries.map((item) => (
+            <div key={item.id} className="aspect-[9/16] bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group overflow-hidden relative">
               {item.image_url ? (
                 <img 
                   src={item.image_url} 
@@ -51,7 +71,7 @@ const Gallery = () => {
                 <ImageIcon className="text-white/10 group-hover:scale-110 transition-transform" size={40} />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end text-left">
-                <p className="text-[#00F5FF] font-mono text-[10px] uppercase mb-1">{item.category || 'CHARACTER'}</p>
+                <p className="text-[#00F5FF] font-mono text-[10px] uppercase mb-1">{item.category || 'Uncategorized'}</p>
                 <h4 className="font-bold text-white text-lg">{item.title}</h4>
                 {item.tags && (
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -69,7 +89,7 @@ const Gallery = () => {
       ) : (
         <div className="text-gray-500 py-20 bg-white/5 rounded-2xl border border-white/10 max-w-2xl mx-auto">
           <ImageIcon className="mx-auto mb-4 text-white/20" size={48} />
-          <p>Belum ada karya yang diunggah.</p>
+          <p>Belum ada karya untuk kategori ini.</p>
         </div>
       )}
     </div>

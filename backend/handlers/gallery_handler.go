@@ -31,6 +31,7 @@ func CreateGallery(c *fiber.Ctx) error {
 	} else {
 		// Parse dari form-data
 		input.Title = c.FormValue("title")
+		input.Info = c.FormValue("info")
 		input.Category = c.FormValue("category")
 		input.Tags = c.FormValue("tags")
 		input.ImageURL = c.FormValue("image_url") // Jika dikirim teks
@@ -67,11 +68,13 @@ func UpdateGallery(c *fiber.Ctx) error {
 		}
 		// Update secara spesifik
 		if input.Title != "" { gallery.Title = input.Title }
+		if input.Info != "" { gallery.Info = input.Info }
 		if input.Category != "" { gallery.Category = input.Category }
 		if input.Tags != "" { gallery.Tags = input.Tags }
 		if input.ImageURL != "" { gallery.ImageURL = input.ImageURL }
 	} else {
 		if title := c.FormValue("title"); title != "" { gallery.Title = title }
+		if info := c.FormValue("info"); info != "" { gallery.Info = info }
 		if category := c.FormValue("category"); category != "" { gallery.Category = category }
 		if tags := c.FormValue("tags"); tags != "" { gallery.Tags = tags }
 		if imgURL := c.FormValue("image_url"); imgURL != "" { gallery.ImageURL = imgURL }

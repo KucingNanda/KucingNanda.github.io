@@ -6,10 +6,14 @@ const API_BASE_URL = 'http://localhost:8080/api';
 export const apiService = {
     async request(endpoint, options = {}) {
         const token = localStorage.getItem('token');
+        const isFormData = options.body instanceof FormData;
         const headers = {
-            'Content-Type': 'application/json',
             ...options.headers
         };
+        
+        if (!isFormData && !headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
 
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
@@ -46,8 +50,8 @@ export const apiService = {
     deleteGame: (id) => apiService.request(`/games/${id}`, { method: 'DELETE' }),
 
     getGallery: () => apiService.request('/gallery'),
-    createGallery: (data) => apiService.request('/gallery', { method: 'POST', body: JSON.stringify(data) }),
-    updateGallery: (id, data) => apiService.request(`/gallery/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createGallery: (data) => apiService.request('/gallery', { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data) }),
+    updateGallery: (id, data) => apiService.request(`/gallery/${id}`, { method: 'PUT', body: data instanceof FormData ? data : JSON.stringify(data) }),
     deleteGallery: (id) => apiService.request(`/gallery/${id}`, { method: 'DELETE' }),
 
     getProfile: () => apiService.request('/profile'),

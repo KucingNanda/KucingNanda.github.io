@@ -13,6 +13,9 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 	
 	// Public Routes
+	api.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(200).JSON(fiber.Map{"message": "Welcome to WebPribadi API v1.0"})
+	})
 	api.Post("/login", handlers.Login)
 	api.Get("/gallery", handlers.GetGalleries)
 	api.Get("/games", handlers.GetGames)
