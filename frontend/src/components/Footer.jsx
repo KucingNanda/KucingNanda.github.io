@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaTwitter, FaInstagram, FaGithub, FaFacebook } from 'react-icons/fa';
+import { FaDiscord, FaInstagram, FaGithub, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Lock, Settings } from 'lucide-react';
 import { apiService } from '../services/api';
@@ -37,9 +37,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 opacity-40 hover:opacity-100 transition-opacity">
         <p className="text-xs font-mono">© 2026 KucingAbu Personal Hub.</p>
         <div className="flex gap-8 items-center">
-          {socials.twitter && (
-            <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-[#00F5FF] transition-colors">
-              <FaTwitter size={18} />
+          {socials.discord && (
+            <a href={socials.discord} target="_blank" rel="noopener noreferrer" className="hover:text-[#5865F2] transition-colors">
+              <FaDiscord size={18} />
             </a>
           )}
           {socials.instagram && (

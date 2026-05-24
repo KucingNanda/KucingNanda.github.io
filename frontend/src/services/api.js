@@ -55,8 +55,8 @@ export const apiService = {
     deleteGallery: (id) => apiService.request(`/gallery/${id}`, { method: 'DELETE' }),
 
     getProfile: () => apiService.request('/profile'),
-    createProfile: (data) => apiService.request('/profile', { method: 'POST', body: JSON.stringify(data) }),
-    updateProfile: (data) => apiService.request('/profile', { method: 'PUT', body: JSON.stringify(data) }),
+    createProfile: (data) => apiService.request('/profile', { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data) }),
+    updateProfile: (data) => apiService.request('/profile', { method: 'PUT', body: data instanceof FormData ? data : JSON.stringify(data) }),
 
     getVaults: () => apiService.request('/vault'),
     createVault: (data) => apiService.request('/vault', { method: 'POST', body: JSON.stringify(data) }),

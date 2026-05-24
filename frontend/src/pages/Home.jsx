@@ -3,27 +3,36 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Palette, Gamepad2, User, Cpu, Activity, Loader2 } from 'lucide-react';
 import { apiService } from '../services/api';
+import AudioPlayer from '../components/AudioPlayer';
 
 const Home = ({ apiStatus }) => {
     const [profile, setProfile] = useState(null);
+    const [latestGalleries, setLatestGalleries] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProfile = async () => {
+        const fetchData = async () => {
             try {
-                const data = await apiService.getProfile();
-                if (Array.isArray(data) && data.length > 0) {
-                    setProfile(data[0]);
-                } else if (data && !Array.isArray(data)) {
-                    setProfile(data);
+                // Fetch Profile
+                const profileData = await apiService.getProfile();
+                if (Array.isArray(profileData) && profileData.length > 0) {
+                    setProfile(profileData[0]);
+                } else if (profileData && !Array.isArray(profileData)) {
+                    setProfile(profileData);
+                }
+
+                // Fetch Gallery for Latest Uploads
+                const galleryData = await apiService.getGallery();
+                if (Array.isArray(galleryData)) {
+                    setLatestGalleries(galleryData.slice(0, 4));
                 }
             } catch (err) {
-                console.error("Failed to fetch profile in Home:", err);
+                console.error("Failed to fetch data in Home:", err);
             } finally {
                 setLoading(false);
             }
         };
-        fetchProfile();
+        fetchData();
     }, []);
 
     return (
@@ -62,8 +71,8 @@ const Home = ({ apiStatus }) => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left mt-8">
                     <Link to="/gallery" className="md:col-span-2 md:row-span-2 p-8 rounded-3xl bg-white/5 border border-white/10 min-h-[300px] flex flex-col justify-end relative overflow-hidden group hover:bg-white/10 transition-colors">
                         <Palette className="absolute top-6 right-6 text-[#8B5CF6] opacity-20 group-hover:opacity-100 transition-opacity" size={60} />
-                        <h3 className="text-3xl font-bold mb-2">AI Gallery</h3>
-                        <p className="text-gray-400">Pameran visual masa depan.</p>
+                        <h3 className="text-3xl font-bold mb-2">Media Gallery</h3>
+                        <p className="text-gray-400">Pameran visual dan kreasi digital.</p>
                     </Link>
 
                     <Link to="/gaming" className="md:col-span-2 p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-end relative overflow-hidden group hover:bg-white/10 transition-colors">
@@ -72,17 +81,62 @@ const Home = ({ apiStatus }) => {
                         <span className="text-[#00F5FF] font-bold mt-2 flex items-center gap-2 group-hover:gap-3 transition-all">View Stats <ArrowUpRight size={16} /></span>
                     </Link>
 
-                    <Link to="/about" className="p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-end group hover:bg-white/10 transition-colors">
-                        <User className="text-gray-500 mb-4 group-hover:text-[#8B5CF6] transition-colors" size={32} />
-                        <span className="font-bold text-white group-hover:text-[#8B5CF6] transition-colors">About Me</span>
-                    </Link>
-
-                    <Link to="/about" className="p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-end group hover:bg-white/10 transition-colors">
-                        <Cpu className="text-gray-500 mb-4 group-hover:text-[#00F5FF] transition-colors" size={32} />
-                        <span className="font-bold text-white group-hover:text-[#00F5FF] transition-colors">Tech Stack</span>
+                    <Link to="/about" className="md:col-span-2 p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-end group hover:bg-white/10 transition-colors relative overflow-hidden">
+                        <User className="absolute top-6 right-6 text-gray-500 opacity-20 group-hover:text-[#8B5CF6] transition-opacity" size={40} />
+                        <h3 className="text-2xl font-bold">About & Tech Stack</h3>
+                        <span className="text-[#8B5CF6] font-bold mt-2 flex items-center gap-2 group-hover:gap-3 transition-all">Discover <ArrowUpRight size={16} /></span>
                     </Link>
                 </div>
             </section>
+
+            {/* Latest Gallery Section */}
+            <section className="py-20 border-t border-white/5">
+                <div className="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 className="text-3xl font-black mb-2">Latest <span className="text-[#8B5CF6]">Uploads</span></h2>
+                        <p className="text-gray-400">Karya terbaru dari galeri.</p>
+                    </div>
+                    <Link to="/gallery" className="hidden md:flex items-center gap-2 text-sm font-bold text-[#00F5FF] hover:text-white transition-colors">
+                        View Full Gallery <ArrowUpRight size={16} />
+                    </Link>
+                </div>
+
+                {latestGalleries.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {latestGalleries.map((item) => (
+                            <Link to="/gallery" key={item.id} className="aspect-square bg-white/5 border border-white/10 rounded-2xl overflow-hidden group relative">
+                                {item.image_url ? (
+                                    <img 
+                                        src={item.image_url} 
+                                        alt={item.title} 
+                                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <Palette className="text-white/10 group-hover:scale-110 transition-transform" size={40} />
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end">
+                                    <p className="text-[#00F5FF] font-mono text-[10px] uppercase mb-1">{item.info || 'Uncategorized'}</p>
+                                    <h4 className="font-bold text-white text-sm truncate">{item.title}</h4>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-10 bg-white/5 rounded-2xl border border-white/10">
+                        <p className="text-gray-500">Belum ada karya yang diunggah.</p>
+                    </div>
+                )}
+                <div className="mt-6 text-center md:hidden">
+                    <Link to="/gallery" className="inline-flex items-center gap-2 text-sm font-bold text-[#00F5FF] hover:text-white transition-colors">
+                        View Full Gallery <ArrowUpRight size={16} />
+                    </Link>
+                </div>
+            </section>
+
+            {/* Floating Audio Player */}
+            <AudioPlayer audioUrl={profile?.audio_url} audioTitle={profile?.audio_title} />
         </div>
     );
 };

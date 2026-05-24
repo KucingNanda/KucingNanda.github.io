@@ -31,10 +31,11 @@ func UploadImageToCloudinary(fileHeader *multipart.FileHeader) (string, error) {
 	}
 	defer file.Close()
 
-	// Unggah file ke folder "webpribadi_gallery" di Cloudinary
+	// Unggah file ke folder "webpribadi_gallery" di Cloudinary (mendukung gambar dan audio)
 	ctx := context.Background()
 	resp, err := cld.Upload.Upload(ctx, file, uploader.UploadParams{
-		Folder: "webpribadi_gallery",
+		Folder:       "webpribadi_gallery",
+		ResourceType: "auto",
 	})
 
 	if err != nil {
