@@ -36,8 +36,6 @@ type Profile struct {
 	CurrentStatus string `gorm:"type:varchar(255)" json:"current_status"`
 	SocialLinks   string `gorm:"type:text" json:"social_links"` // JSON string
 	TechStack     string `gorm:"type:text" json:"tech_stack"`   // JSON string
-	AudioTitle    string `gorm:"type:varchar(255)" json:"audio_title"`
-	AudioURL      string `gorm:"type:text" json:"audio_url"`
 }
 
 // Vault mewakili catatan kredensial penting (Notepad admin)
@@ -49,4 +47,13 @@ type Vault struct {
 	Notes     string         `gorm:"type:text" json:"notes"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
+}
+
+// Playlist mewakili daftar lagu (Music Player)
+type Playlist struct {
+	ID         uint           `gorm:"primaryKey" json:"id"`
+	Title      string         `gorm:"type:varchar(255);not null" json:"title"`
+	AudioURL   string         `gorm:"type:text;not null" json:"audio_url"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
 }

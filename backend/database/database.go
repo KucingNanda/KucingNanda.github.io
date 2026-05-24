@@ -46,7 +46,7 @@ func ConnectDatabase() {
 	fmt.Println("✅ Koneksi Database Berhasil (Log: Silent)")
 
 	// Auto-Migrate tabel berdasarkan model di roadmap
-	err = db.AutoMigrate(&models.User{}, &models.Gallery{}, &models.Game{}, &models.Profile{}, &models.Vault{})
+	err = db.AutoMigrate(&models.User{}, &models.Gallery{}, &models.Game{}, &models.Profile{}, &models.Vault{}, &models.Playlist{})
 	if err != nil {
 		log.Fatal("Gagal melakukan migrasi database: ", err)
 	}

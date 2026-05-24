@@ -211,25 +211,6 @@ const ProfileManager = () => {
                   })()}
                 </div>
               </div>
-
-              {/* Music / Vibe */}
-              <div className="bg-black/20 p-5 rounded-xl border border-white/5 relative group">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Music / Vibe of the Day</h4>
-                  <button onClick={() => openModal(profileData, 'music')} className="text-blue-400 hover:bg-blue-400/10 p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs">
-                    <Edit2 size={14} /> Edit
-                  </button>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
-                    <span className="text-gray-400">♫</span>
-                  </div>
-                  <div className="flex-1 truncate">
-                    <p className="text-sm font-bold text-white truncate">{profileData.audio_title || 'Belum ada lagu'}</p>
-                    {profileData.audio_url && <p className="text-xs text-[#00F5FF]">File terpasang</p>}
-                  </div>
-                </div>
-              </div>
             </div>
           ) : (
             <div className="text-center py-8">
@@ -341,25 +322,6 @@ const ProfileManager = () => {
                       <button type="button" onClick={addTechStackItem} className="w-full py-3 mt-2 border border-dashed border-white/20 rounded-xl text-gray-400 hover:text-white hover:border-[#00F5FF]/50 transition-colors flex items-center justify-center gap-2 text-sm font-bold bg-white/5 hover:bg-white/10">
                         <Plus size={16} /> Tambah Tech Stack
                       </button>
-                    </div>
-                  </div>
-                )}
-
-                {profileEditMode === 'music' && (
-                  <div>
-                    <h4 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider">Music / Vibe of the Day</h4>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm text-gray-400 mb-1">Judul Lagu</label>
-                        <input type="text" name="audio_title" value={formData.audio_title || ''} onChange={handleInputChange} placeholder="Ex: ZZZ Main Theme" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-400 mb-1">File Audio (.mp3)</label>
-                        <input type="file" accept="audio/mp3,audio/*" onChange={handleAudioChange} className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#8B5CF6]/10 file:text-[#8B5CF6] hover:file:bg-[#8B5CF6]/20 transition-colors" />
-                        {(formData.audio_url || selectedAudio) && (
-                          <p className="text-xs text-[#00F5FF] mt-2">File audio sudah {selectedAudio ? 'dipilih' : 'tersimpan'}.</p>
-                        )}
-                      </div>
                     </div>
                   </div>
                 )}

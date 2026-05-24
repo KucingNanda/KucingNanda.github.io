@@ -3,7 +3,6 @@ package handlers
 import (
 	"gamer-hub-api/database"
 	"gamer-hub-api/models"
-	"gamer-hub-api/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -31,17 +30,6 @@ func CreateProfile(c *fiber.Ctx) error {
 		input.CurrentStatus = c.FormValue("current_status")
 		input.SocialLinks = c.FormValue("social_links")
 		input.TechStack = c.FormValue("tech_stack")
-		input.AudioTitle = c.FormValue("audio_title")
-		input.AudioURL = c.FormValue("audio_url")
-	}
-
-	file, err := c.FormFile("audio")
-	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
-		if errUpload != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload audio: " + errUpload.Error()})
-		}
-		input.AudioURL = secureURL
 	}
 
 	database.DB.Create(&input)
@@ -66,25 +54,12 @@ func UpdateProfile(c *fiber.Ctx) error {
 		if input.CurrentStatus != "" { profile.CurrentStatus = input.CurrentStatus }
 		if input.SocialLinks != "" { profile.SocialLinks = input.SocialLinks }
 		if input.TechStack != "" { profile.TechStack = input.TechStack }
-		if input.AudioTitle != "" { profile.AudioTitle = input.AudioTitle }
-		if input.AudioURL != "" { profile.AudioURL = input.AudioURL }
 	} else {
 		if nickname := c.FormValue("nickname"); nickname != "" { profile.Nickname = nickname }
 		if bio := c.FormValue("bio"); bio != "" { profile.Bio = bio }
 		if status := c.FormValue("current_status"); status != "" { profile.CurrentStatus = status }
 		if links := c.FormValue("social_links"); links != "" { profile.SocialLinks = links }
 		if stack := c.FormValue("tech_stack"); stack != "" { profile.TechStack = stack }
-		if audioTitle := c.FormValue("audio_title"); audioTitle != "" { profile.AudioTitle = audioTitle }
-		if audioURL := c.FormValue("audio_url"); audioURL != "" { profile.AudioURL = audioURL }
-	}
-
-	file, err := c.FormFile("audio")
-	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
-		if errUpload != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload audio: " + errUpload.Error()})
-		}
-		profile.AudioURL = secureURL
 	}
 
 	database.DB.Save(&profile)

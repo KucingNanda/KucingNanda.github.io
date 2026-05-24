@@ -136,7 +136,7 @@ const Home = ({ apiStatus }) => {
             </section>
 
             {/* Floating Audio Player */}
-            <AudioPlayer audioUrl={profile?.audio_url} audioTitle={profile?.audio_title} />
+            <AudioPlayer />
         </div>
     );
 };
