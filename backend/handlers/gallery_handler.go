@@ -34,6 +34,8 @@ func CreateGallery(c *fiber.Ctx) error {
 		input.Info = c.FormValue("info")
 		input.Category = c.FormValue("category")
 		input.Tags = c.FormValue("tags")
+		input.ArtistName = c.FormValue("artist_name")
+		input.SourceLink = c.FormValue("source_link")
 		input.ImageURL = c.FormValue("image_url") // Jika dikirim teks
 	}
 
@@ -71,12 +73,19 @@ func UpdateGallery(c *fiber.Ctx) error {
 		if input.Info != "" { gallery.Info = input.Info }
 		if input.Category != "" { gallery.Category = input.Category }
 		if input.Tags != "" { gallery.Tags = input.Tags }
+		if input.ArtistName != "" { gallery.ArtistName = input.ArtistName }
+		if input.SourceLink != "" { gallery.SourceLink = input.SourceLink }
 		if input.ImageURL != "" { gallery.ImageURL = input.ImageURL }
 	} else {
 		if title := c.FormValue("title"); title != "" { gallery.Title = title }
 		if info := c.FormValue("info"); info != "" { gallery.Info = info }
 		if category := c.FormValue("category"); category != "" { gallery.Category = category }
 		if tags := c.FormValue("tags"); tags != "" { gallery.Tags = tags }
+		
+		// Opsional fields bisa di-set kosong atau diganti
+		if artist := c.FormValue("artist_name"); artist != "" { gallery.ArtistName = artist }
+		if source := c.FormValue("source_link"); source != "" { gallery.SourceLink = source }
+		
 		if imgURL := c.FormValue("image_url"); imgURL != "" { gallery.ImageURL = imgURL }
 	}
 

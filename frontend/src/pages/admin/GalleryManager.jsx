@@ -47,7 +47,7 @@ const GalleryManager = () => {
     if (item) {
       setFormData({ ...item });
     } else {
-      setFormData({ title: '', image_url: '', info: 'AI Art (PixAI)', category: 'Lainnya', tags: '' });
+      setFormData({ title: '', image_url: '', info: 'AI Art', category: 'Lainnya', tags: '', artist_name: '', source_link: '' });
     }
     setShowModal(true);
   };
@@ -78,9 +78,11 @@ const GalleryManager = () => {
     try {
       const payload = new FormData();
       payload.append('title', formData.title || '');
-      payload.append('info', formData.info || 'AI Art (PixAI)');
+      payload.append('info', formData.info || 'AI Art');
       payload.append('category', formData.category || 'Lainnya');
       payload.append('tags', formData.tags || '');
+      payload.append('artist_name', formData.artist_name || '');
+      payload.append('source_link', formData.source_link || '');
       if (selectedFile) {
         payload.append('image', selectedFile);
       } else if (formData.image_url) {
@@ -115,7 +117,7 @@ const GalleryManager = () => {
           className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#00F5FF]"
         >
           <option value="All" className="bg-[#0B0F19]">Semua Tipe Karya</option>
-          <option value="AI Art (PixAI)" className="bg-[#0B0F19]">AI Art (PixAI)</option>
+          <option value="AI Art" className="bg-[#0B0F19]">AI Art</option>
           <option value="Art" className="bg-[#0B0F19]">Art</option>
           <option value="Cosplay" className="bg-[#0B0F19]">Cosplay</option>
         </select>
@@ -184,8 +186,8 @@ const GalleryManager = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Tipe Karya (Info)</label>
-                    <select name="info" value={formData.info || 'AI Art (PixAI)'} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]">
-                      <option value="AI Art (PixAI)" className="bg-[#0B0F19]">AI Art (PixAI)</option>
+                    <select name="info" value={formData.info || 'AI Art'} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]">
+                      <option value="AI Art" className="bg-[#0B0F19]">AI Art</option>
                       <option value="Art" className="bg-[#0B0F19]">Art</option>
                       <option value="Cosplay" className="bg-[#0B0F19]">Cosplay</option>
                     </select>
@@ -198,6 +200,16 @@ const GalleryManager = () => {
                       <option value="Zenless Zone Zero" className="bg-[#0B0F19]">Zenless Zone Zero</option>
                       <option value="Lainnya" className="bg-[#0B0F19]">Lainnya</option>
                     </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Nama Artis Asli (Opsional)</label>
+                    <input type="text" name="artist_name" value={formData.artist_name || ''} onChange={handleInputChange} placeholder="Ex: @KucingAbu" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Tautan Sumber (Opsional)</label>
+                    <input type="url" name="source_link" value={formData.source_link || ''} onChange={handleInputChange} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
                   </div>
                 </div>
                 <div>

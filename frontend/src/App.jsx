@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Import Services
 import { apiService } from './services/api';
@@ -36,30 +37,32 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <PageLayout>
-        <Navbar apiStatus={apiStatus} />
+    <HelmetProvider>
+      <Router>
+        <PageLayout>
+          <Navbar apiStatus={apiStatus} />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home apiStatus={apiStatus} />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/gaming" element={<Gaming />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <Admin />
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </main>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home apiStatus={apiStatus} />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/gaming" element={<Gaming />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/login" element={<Login />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <Admin />
+                  </ProtectedRoute>
+                } 
+              />
+            </Routes>
+          </main>
 
-        <Footer />
-      </PageLayout>
-    </Router>
+          <Footer />
+        </PageLayout>
+      </Router>
+    </HelmetProvider>
   );
 }

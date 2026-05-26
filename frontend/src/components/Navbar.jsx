@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Image as ImageIcon, Gamepad2, User, Menu, X, Settings } from 'lucide-react';
+import { apiService } from '../services/api';
 
 const Navbar = ({ apiStatus }) => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const [avatar, setAvatar] = useState(null);
+
+    useEffect(() => {
+        const fetchAvatar = async () => {
+            try {
+                const data = await apiService.getProfile();
+                let profileData = Array.isArray(data) ? data[0] : data;
+                if (profileData && profileData.avatar_url) {
+                    setAvatar(profileData.avatar_url);
+                }
+            } catch (err) {}
+        };
+        fetchAvatar();
+    }, []);
 
     const links = [
         { name: 'Home', path: '/', icon: <Home size={18} /> },
@@ -18,11 +33,15 @@ const Navbar = ({ apiStatus }) => {
         <nav className="fixed top-0 left-0 w-full z-50 px-6 py-4">
             <div className="max-w-7xl mx-auto flex justify-between items-center bg-[#111827]/60 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-3 shadow-2xl">
                 {/* Logo */}
-                <Link to="/" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 bg-[#8B5CF6] rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
-                        <span className="font-bold text-xl italic text-white">G</span>
+                <Link to="/" className="flex items-center gap-3 group">
+                    <div className="w-10 h-10 bg-[#8B5CF6] rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] overflow-hidden shrink-0 border border-white/10">
+                        {avatar ? (
+                            <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="font-bold text-xl italic text-white">G</span>
+                        )}
                     </div>
-                    <span className="font-bold text-xl tracking-tighter text-white">
+                    <span className="font-bold text-xl tracking-tighter text-white hidden sm:block">
                         KUCINGABU<span className="text-[#00F5FF]">HUB</span>
                     </span>
                 </Link>

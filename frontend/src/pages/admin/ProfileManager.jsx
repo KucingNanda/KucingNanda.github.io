@@ -19,7 +19,8 @@ const ProfileManager = () => {
   const [formData, setFormData] = useState({});
   const [profileEditMode, setProfileEditMode] = useState(null);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [selectedAudio, setSelectedAudio] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -36,9 +37,9 @@ const ProfileManager = () => {
       setLoading(false);
     }
   };
-
   const openModal = (item = null, mode = null) => {
-    setSelectedAudio(null);
+    setSelectedAvatar(null);
+    setPreviewUrl(null);
     setProfileEditMode(mode);
     if (item) {
       setFormData({
@@ -46,7 +47,7 @@ const ProfileManager = () => {
         tech_stack: (!item.tech_stack || item.tech_stack === "[]" || item.tech_stack === "") ? defaultTechStack : item.tech_stack
       });
     } else {
-      setFormData({ nickname: '', bio: '', current_status: '', social_links: '', tech_stack: defaultTechStack });
+      setFormData({ nickname: '', bio: '', current_status: '', social_links: '', tech_stack: defaultTechStack, avatar_url: '' });
     }
     setShowModal(true);
   };
@@ -54,7 +55,8 @@ const ProfileManager = () => {
   const closeModal = () => {
     setShowModal(false);
     setFormData({});
-    setSelectedAudio(null);
+    setSelectedAvatar(null);
+    setPreviewUrl(null);
     setProfileEditMode(null);
   };
 
@@ -63,9 +65,12 @@ const ProfileManager = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAudioChange = (e) => {
+  const handleAvatarChange = (e) => {
     const file = e.target.files[0];
-    if (file) setSelectedAudio(file);
+    if (file) {
+      setSelectedAvatar(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   const handleSocialChange = (platform, value) => {
@@ -112,9 +117,11 @@ const ProfileManager = () => {
       payload.append('current_status', formData.current_status || '');
       payload.append('social_links', formData.social_links || '');
       payload.append('tech_stack', formData.tech_stack || '');
-      payload.append('audio_title', formData.audio_title || '');
-      if (selectedAudio) payload.append('audio', selectedAudio);
-      else if (formData.audio_url) payload.append('audio_url', formData.audio_url);
+      if (selectedAvatar) {
+        payload.append('avatar', selectedAvatar);
+      } else if (formData.avatar_url) {
+        payload.append('avatar_url', formData.avatar_url);
+      }
 
       if (profileData) await apiService.updateProfile(payload);
       else await apiService.createProfile(payload);
@@ -148,9 +155,17 @@ const ProfileManager = () => {
                     <Edit2 size={14} /> Edit
                   </button>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase">Nickname</p>
+                <div className="flex gap-6 items-start">
+                  <div className="shrink-0 w-24 h-24 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden">
+                    {profileData.avatar_url ? (
+                      <img src={profileData.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-gray-500 text-xs text-center px-2">No Photo</span>
+                    )}
+                  </div>
+                  <div className="space-y-3 flex-1">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase">Nickname</p>
                     <p className="text-base font-medium">{profileData.nickname || '-'}</p>
                   </div>
                   <div>
@@ -159,7 +174,8 @@ const ProfileManager = () => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase">Current Status</p>
-                    <p className="text-sm">{profileData.current_status || '-'}</p>
+                      <p className="text-sm">{profileData.current_status || '-'}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -237,6 +253,24 @@ const ProfileManager = () => {
               <form id="profileForm" onSubmit={handleSubmit} className="space-y-4">
                 {profileEditMode === 'basic' && (
                   <>
+                    <div className="flex gap-6 items-center">
+                      <div className="w-24 h-24 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center relative overflow-hidden shrink-0 group hover:border-[#00F5FF]/50 transition-colors">
+                        {previewUrl || formData.avatar_url ? (
+                          <img src={previewUrl || formData.avatar_url} alt="Avatar Preview" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-gray-500 text-xs text-center px-2">Upload Photo</span>
+                        )}
+                        <input type="file" accept="image/*" onChange={handleAvatarChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity pointer-events-none">
+                          <Edit2 size={16} className="text-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1 text-sm text-gray-400">
+                        <p className="font-bold text-white mb-1">Foto Profil / Avatar</p>
+                        <p>Klik kotak di samping untuk mengunggah foto profil Anda. (Disarankan rasio 1:1 persegi)</p>
+                      </div>
+                    </div>
+                    
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm text-gray-400 mb-1">Nickname</label>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Code, Layers, Palette, Server, Database, Shield, Wand2, Loader2, Cpu, Monitor, FileCode2, Terminal, PenTool, LayoutTemplate, Smartphone } from 'lucide-react';
 import { apiService } from '../services/api';
+import { Helmet } from 'react-helmet-async';
 
 // Mapping string icon ke komponen lucide-react
 const IconMap = {
@@ -72,7 +73,12 @@ const About = () => {
   }, []);
 
   return (
-    <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
+    <>
+      <Helmet>
+        <title>About | KucingAbu Hub</title>
+        <meta name="description" content="Kenali lebih jauh tentang arsitektur proyek, teknologi yang digunakan, dan biografi digital saya di KucingAbu Hub." />
+      </Helmet>
+      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
       {loading ? (
         <div className="flex justify-center items-center py-20">
           <Loader2 className="animate-spin text-[#8B5CF6]" size={48} />
@@ -84,11 +90,13 @@ const About = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 p-8 bg-white/5 border border-white/10 rounded-[2.5rem] text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-10 opacity-5">
-              <User size={150} />
-            </div>
-            <div className="w-32 h-32 rounded-3xl bg-[#8B5CF6] mx-auto mb-6 flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)]">
-              <User size={60} className="text-white" />
+
+            <div className="w-32 h-32 rounded-3xl bg-[#8B5CF6] mx-auto mb-6 flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] overflow-hidden">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Profile Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={60} className="text-white" />
+              )}
             </div>
             <h3 className="text-2xl font-black mb-1">{profile?.nickname || 'GamerName'}</h3>
             <p className="text-[#8B5CF6] font-mono text-xs uppercase tracking-widest mb-6">{profile?.current_status || 'Digital Alchemist'}</p>
@@ -119,6 +127,7 @@ const About = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

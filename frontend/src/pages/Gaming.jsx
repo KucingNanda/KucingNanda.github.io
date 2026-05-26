@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Gamepad2, Loader2, X, Copy, Check, ChevronRight } from 'lucide-react';
 import { apiService } from '../services/api';
+import { Helmet } from 'react-helmet-async';
 
 const Gaming = () => {
   const [games, setGames] = useState([]);
@@ -81,7 +82,12 @@ const Gaming = () => {
   };
 
   return (
-    <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto relative min-h-screen">
+    <>
+      <Helmet>
+        <title>Gaming Corner | KucingAbu Hub</title>
+        <meta name="description" content="Koleksi User ID (UID), profil gaming, dan game favorit KucingAbu." />
+      </Helmet>
+      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto relative min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 relative z-10">
         <div>
           <h2 className="text-5xl font-black mb-2 italic">Gaming <span className="text-[#00F5FF]">Corner</span></h2>
@@ -196,6 +202,7 @@ const Gaming = () => {
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };
 

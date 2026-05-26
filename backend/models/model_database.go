@@ -10,10 +10,12 @@ import (
 type Gallery struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
 	Title     string         `gorm:"type:varchar(255);not null" json:"title"`
-	ImageURL  string         `gorm:"type:text;not null" json:"image_url"`
-	Info      string         `gorm:"type:varchar(100)" json:"info"` // Menyimpan AI Art, Art, Cosplay
-	Category  string         `gorm:"type:varchar(100)" json:"category"` // Menyimpan Character, Skenario, dll
-	Tags      string         `gorm:"type:varchar(255)" json:"tags"` // Disimpan sebagai string CSV
+	ImageURL   string         `gorm:"type:text;not null" json:"image_url"`
+	Info       string         `gorm:"type:varchar(100)" json:"info"` // Menyimpan AI Art, Art, Cosplay
+	Category   string         `gorm:"type:varchar(100)" json:"category"` // Menyimpan Character, Skenario, dll
+	Tags       string         `gorm:"type:varchar(255)" json:"tags"` // Disimpan sebagai string CSV
+	ArtistName string         `gorm:"type:varchar(255)" json:"artist_name"` // Nama artis asli (opsional)
+	SourceLink string         `gorm:"type:text" json:"source_link"` // Link sumber asli (opsional)
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
@@ -36,6 +38,7 @@ type Profile struct {
 	CurrentStatus string `gorm:"type:varchar(255)" json:"current_status"`
 	SocialLinks   string `gorm:"type:text" json:"social_links"` // JSON string
 	TechStack     string `gorm:"type:text" json:"tech_stack"`   // JSON string
+	AvatarURL     string `gorm:"type:text" json:"avatar_url"`   // URL untuk gambar profil
 }
 
 // Vault mewakili catatan kredensial penting (Notepad admin)

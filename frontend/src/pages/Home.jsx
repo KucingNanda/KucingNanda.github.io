@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, Palette, Gamepad2, User, Cpu, Activity, Loader2 } from 'lucide-react';
 import { apiService } from '../services/api';
 import AudioPlayer from '../components/AudioPlayer';
+import { Helmet } from 'react-helmet-async';
 
 const Home = ({ apiStatus }) => {
     const [profile, setProfile] = useState(null);
@@ -36,8 +37,13 @@ const Home = ({ apiStatus }) => {
     }, []);
 
     return (
-        <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-            <section className="text-center py-20 relative min-h-[60vh] flex flex-col justify-center">
+        <>
+            <Helmet>
+                <title>Home | KucingAbu Hub</title>
+                <meta name="description" content="Selamat datang di KucingAbu Hub. Temukan koleksi karya, profil gaming, dan portfolio digital saya." />
+            </Helmet>
+            <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+                <section className="text-center py-20 relative min-h-[60vh] flex flex-col justify-center">
                 <div className="px-4 py-1 border border-white/10 rounded-full inline-flex items-center gap-2 mb-8 bg-white/5 mx-auto">
                     <Activity size={14} className={apiStatus === 'online' ? 'text-[#00F5FF]' : 'text-red-500'} />
                     <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400">
@@ -83,7 +89,7 @@ const Home = ({ apiStatus }) => {
 
                     <Link to="/about" className="md:col-span-2 p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-end group hover:bg-white/10 transition-colors relative overflow-hidden">
                         <User className="absolute top-6 right-6 text-gray-500 opacity-20 group-hover:text-[#8B5CF6] transition-opacity" size={40} />
-                        <h3 className="text-2xl font-bold">About & Tech Stack</h3>
+                        <h3 className="text-2xl font-bold">About</h3>
                         <span className="text-[#8B5CF6] font-bold mt-2 flex items-center gap-2 group-hover:gap-3 transition-all">Discover <ArrowUpRight size={16} /></span>
                     </Link>
                 </div>
@@ -138,6 +144,7 @@ const Home = ({ apiStatus }) => {
             {/* Floating Audio Player */}
             <AudioPlayer />
         </div>
+        </>
     );
 };
 

@@ -3,6 +3,7 @@ package handlers
 import (
 	"gamer-hub-api/database"
 	"gamer-hub-api/models"
+	"gamer-hub-api/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -30,6 +31,17 @@ func CreateProfile(c *fiber.Ctx) error {
 		input.CurrentStatus = c.FormValue("current_status")
 		input.SocialLinks = c.FormValue("social_links")
 		input.TechStack = c.FormValue("tech_stack")
+		input.AvatarURL = c.FormValue("avatar_url")
+	}
+
+	// Tangani upload gambar (opsional)
+	file, err := c.FormFile("avatar")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar profil: " + errUpload.Error()})
+		}
+		input.AvatarURL = secureURL
 	}
 
 	database.DB.Create(&input)
@@ -54,12 +66,24 @@ func UpdateProfile(c *fiber.Ctx) error {
 		if input.CurrentStatus != "" { profile.CurrentStatus = input.CurrentStatus }
 		if input.SocialLinks != "" { profile.SocialLinks = input.SocialLinks }
 		if input.TechStack != "" { profile.TechStack = input.TechStack }
+		if input.AvatarURL != "" { profile.AvatarURL = input.AvatarURL }
 	} else {
 		if nickname := c.FormValue("nickname"); nickname != "" { profile.Nickname = nickname }
 		if bio := c.FormValue("bio"); bio != "" { profile.Bio = bio }
 		if status := c.FormValue("current_status"); status != "" { profile.CurrentStatus = status }
 		if links := c.FormValue("social_links"); links != "" { profile.SocialLinks = links }
 		if stack := c.FormValue("tech_stack"); stack != "" { profile.TechStack = stack }
+		if avatarURL := c.FormValue("avatar_url"); avatarURL != "" { profile.AvatarURL = avatarURL }
+	}
+
+	// Tangani upload gambar (opsional)
+	file, err := c.FormFile("avatar")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar profil: " + errUpload.Error()})
+		}
+		profile.AvatarURL = secureURL
 	}
 
 	database.DB.Save(&profile)

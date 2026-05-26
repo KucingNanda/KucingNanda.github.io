@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image as ImageIcon, Loader2 } from 'lucide-react';
 import { apiService } from '../services/api';
+import { Helmet } from 'react-helmet-async';
 
 const Gallery = () => {
   const [galleries, setGalleries] = useState([]);
@@ -8,7 +9,7 @@ const Gallery = () => {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const filters = ['All', 'AI Art (PixAI)', 'Art', 'Cosplay'];
+  const filters = ['All', 'AI Art', 'Art', 'Cosplay'];
 
   useEffect(() => {
     const fetchGallery = async () => {
@@ -33,9 +34,14 @@ const Gallery = () => {
   });
 
   return (
-    <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
+    <>
+      <Helmet>
+        <title>Media Gallery | KucingAbu Hub</title>
+        <meta name="description" content="Koleksi karya visual, AI Art, Cosplay, dan kreasi digital eksklusif dari KucingAbu Hub." />
+      </Helmet>
+      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
       <h2 className="text-5xl font-black mb-4 uppercase italic">Media <span className="text-[#8B5CF6]">Gallery</span></h2>
-      <p className="text-gray-500 mb-8">Koleksi karya visual dari PixAI dan eksperimen digital.</p>
+      <p className="text-gray-500 mb-8">Koleksi karya visual dan eksperimen digital.</p>
       
       <div className="flex flex-wrap justify-center gap-2 mb-12">
         {filters.map(filter => (
@@ -73,6 +79,12 @@ const Gallery = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end text-left">
                 <p className="text-[#00F5FF] font-mono text-[10px] uppercase mb-1">{item.category || 'Uncategorized'}</p>
                 <h4 className="font-bold text-white text-lg">{item.title}</h4>
+                <p className="text-xs text-gray-400 mt-1">By: <span className="text-white">{item.artist_name || 'Unknown Artist'}</span></p>
+                {item.source_link && (
+                  <a href={item.source_link} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 text-[10px] font-bold text-[#8B5CF6] hover:text-[#00F5FF] transition-colors border border-[#8B5CF6]/30 px-2 py-1 rounded w-max">
+                    🔗 View Source
+                  </a>
+                )}
                 {item.tags && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {item.tags.split(',').map((tag, idx) => (
@@ -93,6 +105,7 @@ const Gallery = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
