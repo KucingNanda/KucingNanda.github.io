@@ -28,6 +28,7 @@ type Game struct {
 	Nickname string `gorm:"type:varchar(100)" json:"nickname"`
 	UID      string `gorm:"type:varchar(100)" json:"uid"` // In-game UID
 	Bio      string `gorm:"type:text" json:"bio"`
+	IconURL  string `gorm:"type:text" json:"icon_url"` // URL icon gambar game
 }
 
 // Profile mewakili data pribadi user
@@ -37,8 +38,9 @@ type Profile struct {
 	Bio           string `gorm:"type:text" json:"bio"`
 	CurrentStatus string `gorm:"type:varchar(255)" json:"current_status"`
 	SocialLinks   string `gorm:"type:text" json:"social_links"` // JSON string
-	TechStack     string `gorm:"type:text" json:"tech_stack"`   // JSON string
-	AvatarURL     string `gorm:"type:text" json:"avatar_url"`   // URL untuk gambar profil
+	TechStack         string `gorm:"type:text" json:"tech_stack"`         // JSON string
+	CurrentObsessions string `gorm:"type:text" json:"current_obsessions"` // JSON string
+	AvatarURL         string `gorm:"type:text" json:"avatar_url"`         // URL untuk gambar profil
 }
 
 // Vault mewakili catatan kredensial penting (Notepad admin)
@@ -52,11 +54,4 @@ type Vault struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 }
 
-// Playlist mewakili daftar lagu (Music Player)
-type Playlist struct {
-	ID         uint           `gorm:"primaryKey" json:"id"`
-	Title      string         `gorm:"type:varchar(255);not null" json:"title"`
-	AudioURL   string         `gorm:"type:text;not null" json:"audio_url"`
-	CreatedAt  time.Time      `json:"created_at"`
-	UpdatedAt  time.Time      `json:"updated_at"`
-}
+

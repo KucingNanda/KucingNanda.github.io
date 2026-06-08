@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
+import { Plus, Trash2, Edit2, Loader2, X, Eye, EyeOff } from 'lucide-react';
 import { apiService } from '../../services/api';
+import { CustomAlert } from '../../utils/alert';
 
 const VaultManager = () => {
   const [data, setData] = useState([]);
@@ -28,12 +29,15 @@ const VaultManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    const result = await CustomAlert.confirmDelete();
+    if (!result.isConfirmed) return;
+
     try {
       await apiService.deleteVault(id);
+      CustomAlert.success('Terhapus!', 'Data vault berhasil dihapus.');
       fetchData();
     } catch (err) {
-      alert("Gagal menghapus: " + err.message);
+      CustomAlert.error('Gagal Menghapus', err.message);
     }
   };
 
@@ -65,9 +69,10 @@ const VaultManager = () => {
       else await apiService.createVault(formData);
       
       closeModal();
+      CustomAlert.success('Berhasil!', `Data vault berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}.`);
       fetchData();
     } catch (err) {
-      alert("Gagal menyimpan data: " + err.message);
+      CustomAlert.error('Gagal Menyimpan', err.message);
     } finally {
       setSubmitLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
 import { apiService } from '../../services/api';
+import { CustomAlert } from '../../utils/alert';
 
 const GamesManager = () => {
   const [data, setData] = useState([]);
@@ -10,6 +11,8 @@ const GamesManager = () => {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -28,21 +31,26 @@ const GamesManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    const result = await CustomAlert.confirmDelete();
+    if (!result.isConfirmed) return;
+
     try {
       await apiService.deleteGame(id);
+      CustomAlert.success('Terhapus!', 'Data game berhasil dihapus.');
       fetchData();
     } catch (err) {
-      alert("Gagal menghapus: " + err.message);
+      CustomAlert.error('Gagal Menghapus', err.message);
     }
   };
 
   const openModal = (item = null) => {
     setIsEditing(!!item);
+    setSelectedIcon(null);
+    setPreviewUrl(null);
     if (item) {
       setFormData({ ...item });
     } else {
-      setFormData({ game_name: '', nickname: '', uid: '', bio: '' });
+      setFormData({ game_name: '', nickname: '', uid: '', bio: '', icon_url: '' });
     }
     setShowModal(true);
   };
@@ -50,6 +58,8 @@ const GamesManager = () => {
   const closeModal = () => {
     setShowModal(false);
     setFormData({});
+    setSelectedIcon(null);
+    setPreviewUrl(null);
   };
 
   const handleInputChange = (e) => {
@@ -57,17 +67,37 @@ const GamesManager = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleIconChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedIcon(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitLoading(true);
     try {
-      if (isEditing) await apiService.updateGame(formData.id, formData);
-      else await apiService.createGame(formData);
+      const payload = new FormData();
+      payload.append('game_name', formData.game_name || '');
+      payload.append('nickname', formData.nickname || '');
+      payload.append('uid', formData.uid || '');
+      payload.append('bio', formData.bio || '');
+      if (selectedIcon) {
+        payload.append('icon', selectedIcon);
+      } else if (formData.icon_url) {
+        payload.append('icon_url', formData.icon_url);
+      }
+
+      if (isEditing) await apiService.updateGame(formData.id, payload);
+      else await apiService.createGame(payload);
       
       closeModal();
+      CustomAlert.success('Berhasil!', `Data game berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}.`);
       fetchData();
     } catch (err) {
-      alert("Gagal menyimpan data: " + err.message);
+      CustomAlert.error('Gagal Menyimpan', err.message);
     } finally {
       setSubmitLoading(false);
     }
@@ -135,6 +165,24 @@ const GamesManager = () => {
             
             <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
               <form id="gamesForm" onSubmit={handleSubmit} className="space-y-4">
+                <div className="flex gap-6 items-center">
+                  <div className="w-20 h-20 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center relative overflow-hidden shrink-0 group hover:border-[#00F5FF]/50 transition-colors">
+                    {previewUrl || formData.icon_url ? (
+                      <img src={previewUrl || formData.icon_url} alt="Game Icon Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-gray-500 text-[10px] text-center px-2">Upload Logo</span>
+                    )}
+                    <input type="file" accept="image/*" onChange={handleIconChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity pointer-events-none">
+                      <Edit2 size={16} className="text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1 text-sm text-gray-400">
+                    <p className="font-bold text-white mb-1">Ikon / Logo Game</p>
+                    <p className="text-xs">Klik kotak di samping untuk mengunggah logo game. (Disarankan rasio 1:1 persegi)</p>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">Nama Game</label>
                   <input type="text" name="game_name" value={formData.game_name || ''} onChange={handleInputChange} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />

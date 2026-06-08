@@ -42,7 +42,7 @@ func CreateGallery(c *fiber.Ctx) error {
 	// Handle Upload Image jika ada file fisik
 	file, err := c.FormFile("image")
 	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Gallery")
 		if errUpload != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar: " + errUpload.Error()})
 		}
@@ -92,7 +92,7 @@ func UpdateGallery(c *fiber.Ctx) error {
 	// Tangani pembaruan gambar fisik jika dilampirkan
 	file, err := c.FormFile("image")
 	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Gallery")
 		if errUpload != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar: " + errUpload.Error()})
 		}

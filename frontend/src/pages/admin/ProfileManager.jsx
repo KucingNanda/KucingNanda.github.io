@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
 import { apiService } from '../../services/api';
+import { CustomAlert } from '../../utils/alert';
 
 const defaultTechStack = JSON.stringify([
   { category: "Frontend Core", stack: "React 19 + Vite", desc: "Rendering UI yang sangat cepat dan reaktif.", icon: "Layers" },
@@ -9,6 +10,12 @@ const defaultTechStack = JSON.stringify([
   { category: "Data Layer", stack: "MySQL + GORM", desc: "Manajemen relasi database yang aman & otomatis.", icon: "Database" },
   { category: "Security", stack: "JWT Auth & Bcrypt", desc: "Sistem enkripsi sandi dan token untuk rute Admin.", icon: "Shield" },
   { category: "Micro-Animations", stack: "Framer Motion", desc: "Transisi interaktif dan pergerakan elemen dinamis.", icon: "Wand2" }
+]);
+
+const defaultObsessions = JSON.stringify([
+  { category: "watching", value: "" },
+  { category: "playing", value: "" },
+  { category: "building", value: "" }
 ]);
 
 const ProfileManager = () => {
@@ -44,10 +51,11 @@ const ProfileManager = () => {
     if (item) {
       setFormData({
         ...item,
-        tech_stack: (!item.tech_stack || item.tech_stack === "[]" || item.tech_stack === "") ? defaultTechStack : item.tech_stack
+        tech_stack: (!item.tech_stack || item.tech_stack === "[]" || item.tech_stack === "") ? defaultTechStack : item.tech_stack,
+        current_obsessions: (!item.current_obsessions || item.current_obsessions === "[]" || item.current_obsessions === "") ? defaultObsessions : item.current_obsessions
       });
     } else {
-      setFormData({ nickname: '', bio: '', current_status: '', social_links: '', tech_stack: defaultTechStack, avatar_url: '' });
+      setFormData({ nickname: '', bio: '', current_status: '', social_links: '', tech_stack: defaultTechStack, current_obsessions: defaultObsessions, avatar_url: '' });
     }
     setShowModal(true);
   };
@@ -107,6 +115,30 @@ const ProfileManager = () => {
     } catch (e) {}
   };
 
+  const handleObsessionChange = (index, field, value) => {
+    try {
+      let obs = JSON.parse(formData.current_obsessions || "[]");
+      obs[index] = { ...obs[index], [field]: value };
+      setFormData(prev => ({ ...prev, current_obsessions: JSON.stringify(obs) }));
+    } catch (e) {}
+  };
+
+  const addObsessionItem = () => {
+    try {
+      let obs = JSON.parse(formData.current_obsessions || "[]");
+      obs.push({ category: "watching", value: "" });
+      setFormData(prev => ({ ...prev, current_obsessions: JSON.stringify(obs) }));
+    } catch (e) {}
+  };
+
+  const removeObsessionItem = (index) => {
+    try {
+      let obs = JSON.parse(formData.current_obsessions || "[]");
+      obs.splice(index, 1);
+      setFormData(prev => ({ ...prev, current_obsessions: JSON.stringify(obs) }));
+    } catch (e) {}
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitLoading(true);
@@ -117,6 +149,7 @@ const ProfileManager = () => {
       payload.append('current_status', formData.current_status || '');
       payload.append('social_links', formData.social_links || '');
       payload.append('tech_stack', formData.tech_stack || '');
+      payload.append('current_obsessions', formData.current_obsessions || '');
       if (selectedAvatar) {
         payload.append('avatar', selectedAvatar);
       } else if (formData.avatar_url) {
@@ -127,9 +160,10 @@ const ProfileManager = () => {
       else await apiService.createProfile(payload);
       
       closeModal();
+      CustomAlert.success('Berhasil!', `Profil berhasil ${profileData ? 'diperbarui' : 'dibuat'}.`);
       fetchData();
     } catch (err) {
-      alert("Gagal menyimpan profil: " + err.message);
+      CustomAlert.error('Gagal Menyimpan', err.message);
     } finally {
       setSubmitLoading(false);
     }
@@ -221,6 +255,31 @@ const ProfileManager = () => {
                         <div key={idx} className="px-3 py-1 bg-[#8B5CF6]/10 text-[#8B5CF6] rounded-lg text-xs border border-[#8B5CF6]/20">
                           <span className="opacity-70 font-mono uppercase mr-1">{item.category}:</span>
                           <span className="font-bold">{item.stack}</span>
+                        </div>
+                      ));
+                    } catch(e) { return <span className="text-red-500 text-sm">Format tidak valid</span>; }
+                  })()}
+                </div>
+              </div>
+
+              {/* Current Obsessions */}
+              <div className="bg-black/20 p-5 rounded-xl border border-white/5 relative group">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Current Obsessions</h4>
+                  <button onClick={() => openModal(profileData, 'obsessions')} className="text-blue-400 hover:bg-blue-400/10 p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs">
+                    <Edit2 size={14} /> Edit
+                  </button>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {(() => {
+                    try {
+                      const obs = JSON.parse(profileData.current_obsessions || "[]");
+                      const activeObs = obs.filter(o => o.value && o.value.trim() !== "");
+                      if (activeObs.length === 0) return <span className="text-sm text-gray-600">-</span>;
+                      return activeObs.map((item, idx) => (
+                        <div key={idx} className="px-4 py-2 bg-[#00F5FF]/10 text-white rounded-lg text-sm border border-[#00F5FF]/20 flex items-center">
+                          <span className="opacity-70 font-mono uppercase w-24 shrink-0 text-[#00F5FF] text-xs">{item.category}:</span>
+                          <span className="font-bold">{item.value}</span>
                         </div>
                       ));
                     } catch(e) { return <span className="text-red-500 text-sm">Format tidak valid</span>; }
@@ -355,6 +414,48 @@ const ProfileManager = () => {
                       })()}
                       <button type="button" onClick={addTechStackItem} className="w-full py-3 mt-2 border border-dashed border-white/20 rounded-xl text-gray-400 hover:text-white hover:border-[#00F5FF]/50 transition-colors flex items-center justify-center gap-2 text-sm font-bold bg-white/5 hover:bg-white/10">
                         <Plus size={16} /> Tambah Tech Stack
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {profileEditMode === 'obsessions' && (
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Current Obsessions / Interests</label>
+                    <div className="space-y-3 bg-white/5 p-4 rounded-xl border border-white/5">
+                      {(() => {
+                        let parsedObs = [];
+                        try { parsedObs = JSON.parse(formData.current_obsessions || "[]"); } catch (e) { parsedObs = []; }
+                        return parsedObs.map((item, idx) => (
+                          <div key={idx} className="p-3 bg-black/40 border border-white/10 rounded-xl relative group flex gap-3 items-center">
+                            <select 
+                              value={item.category || 'watching'} 
+                              onChange={(e) => handleObsessionChange(idx, 'category', e.target.value)} 
+                              className="w-1/3 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF] text-white capitalize"
+                            >
+                              <option value="watching" className="bg-[#0B0F19]">Watching</option>
+                              <option value="playing" className="bg-[#0B0F19]">Playing</option>
+                              <option value="building" className="bg-[#0B0F19]">Building</option>
+                              <option value="learning" className="bg-[#0B0F19]">Learning</option>
+                              <option value="quest" className="bg-[#0B0F19]">Quest</option>
+                              <option value="listening" className="bg-[#0B0F19]">Listening</option>
+                              <option value="simping" className="bg-[#0B0F19]">Simping</option>
+                            </select>
+                            <input 
+                              type="text" 
+                              placeholder="Kosongkan untuk menyembunyikan..." 
+                              value={item.value || ''} 
+                              onChange={(e) => handleObsessionChange(idx, 'value', e.target.value)} 
+                              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]" 
+                            />
+                            <button type="button" onClick={() => removeObsessionItem(idx)} className="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded-lg" title="Hapus">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        ));
+                      })()}
+                      <button type="button" onClick={addObsessionItem} className="w-full py-3 mt-2 border border-dashed border-white/20 rounded-xl text-gray-400 hover:text-white hover:border-[#00F5FF]/50 transition-colors flex items-center justify-center gap-2 text-sm font-bold bg-white/5 hover:bg-white/10">
+                        <Plus size={16} /> Tambah Obsession
                       </button>
                     </div>
                   </div>

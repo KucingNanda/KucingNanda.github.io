@@ -31,13 +31,14 @@ func CreateProfile(c *fiber.Ctx) error {
 		input.CurrentStatus = c.FormValue("current_status")
 		input.SocialLinks = c.FormValue("social_links")
 		input.TechStack = c.FormValue("tech_stack")
+		input.CurrentObsessions = c.FormValue("current_obsessions")
 		input.AvatarURL = c.FormValue("avatar_url")
 	}
 
 	// Tangani upload gambar (opsional)
 	file, err := c.FormFile("avatar")
 	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Profile")
 		if errUpload != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar profil: " + errUpload.Error()})
 		}
@@ -66,6 +67,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		if input.CurrentStatus != "" { profile.CurrentStatus = input.CurrentStatus }
 		if input.SocialLinks != "" { profile.SocialLinks = input.SocialLinks }
 		if input.TechStack != "" { profile.TechStack = input.TechStack }
+		if input.CurrentObsessions != "" { profile.CurrentObsessions = input.CurrentObsessions }
 		if input.AvatarURL != "" { profile.AvatarURL = input.AvatarURL }
 	} else {
 		if nickname := c.FormValue("nickname"); nickname != "" { profile.Nickname = nickname }
@@ -73,13 +75,14 @@ func UpdateProfile(c *fiber.Ctx) error {
 		if status := c.FormValue("current_status"); status != "" { profile.CurrentStatus = status }
 		if links := c.FormValue("social_links"); links != "" { profile.SocialLinks = links }
 		if stack := c.FormValue("tech_stack"); stack != "" { profile.TechStack = stack }
+		if obsessions := c.FormValue("current_obsessions"); obsessions != "" { profile.CurrentObsessions = obsessions }
 		if avatarURL := c.FormValue("avatar_url"); avatarURL != "" { profile.AvatarURL = avatarURL }
 	}
 
 	// Tangani upload gambar (opsional)
 	file, err := c.FormFile("avatar")
 	if err == nil && file != nil {
-		secureURL, errUpload := services.UploadImageToCloudinary(file)
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Profile")
 		if errUpload != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload gambar profil: " + errUpload.Error()})
 		}

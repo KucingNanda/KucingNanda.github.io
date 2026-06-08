@@ -113,8 +113,12 @@ const Gaming = () => {
               className="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between group cursor-pointer hover:bg-white/10 transition-colors"
             >
               <div className="flex gap-4 items-center overflow-hidden">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${idx % 2 === 0 ? 'from-[#8B5CF6]' : 'from-[#00F5FF]'} to-black flex items-center justify-center shadow-lg shrink-0`}>
-                  <Gamepad2 className="text-white" size={24} />
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${idx % 2 === 0 ? 'from-[#8B5CF6]' : 'from-[#00F5FF]'} to-black flex items-center justify-center shadow-lg shrink-0 overflow-hidden`}>
+                  {game.icon_url ? (
+                    <img src={game.icon_url} alt={game.game_name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                  ) : (
+                    <Gamepad2 className="text-white" size={24} />
+                  )}
                 </div>
                 <div className="overflow-hidden flex flex-col gap-0.5">
                   <h4 className="text-lg font-bold truncate group-hover:text-[#00F5FF] transition-colors">{game.game_name}</h4>
@@ -162,8 +166,12 @@ const Gaming = () => {
                 </button>
                 
                 <div className="flex gap-5 items-center pr-12">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00F5FF] to-[#8B5CF6] flex items-center justify-center shadow-[0_0_20px_rgba(0,245,255,0.3)] shrink-0">
-                    <Gamepad2 className="text-white" size={32} />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00F5FF] to-[#8B5CF6] flex items-center justify-center shadow-[0_0_20px_rgba(0,245,255,0.3)] shrink-0 overflow-hidden">
+                    {selectedGame.icon_url ? (
+                      <img src={selectedGame.icon_url} alt={selectedGame.game_name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Gamepad2 className="text-white" size={32} />
+                    )}
                   </div>
                   <div>
                     <h3 className="text-3xl font-black italic tracking-tight">{selectedGame.game_name}</h3>

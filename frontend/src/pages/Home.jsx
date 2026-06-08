@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Palette, Gamepad2, User, Cpu, Activity, Loader2 } from 'lucide-react';
+import { ArrowUpRight, Palette, Gamepad2, User, Cpu, Activity, Loader2, Tv, Code, BookOpen, Sword, Music, Heart } from 'lucide-react';
 import { apiService } from '../services/api';
-import AudioPlayer from '../components/AudioPlayer';
 import { Helmet } from 'react-helmet-async';
 
 const Home = ({ apiStatus }) => {
@@ -95,6 +94,48 @@ const Home = ({ apiStatus }) => {
                 </div>
             </section>
 
+            {/* Current Obsession Section */}
+            {(() => {
+                let obs = [];
+                try { obs = JSON.parse(profile?.current_obsessions || "[]"); } catch (e) {}
+                const activeObs = obs.filter(o => o.value && o.value.trim() !== "");
+                
+                if (activeObs.length === 0) return null;
+
+                const getIcon = (category) => {
+                    switch(category) {
+                        case 'watching': return <Tv size={18} />;
+                        case 'playing': return <Gamepad2 size={18} />;
+                        case 'building': return <Code size={18} />;
+                        case 'learning': return <BookOpen size={18} />;
+                        case 'quest': return <Sword size={18} />;
+                        case 'listening': return <Music size={18} />;
+                        case 'simping': return <Heart size={18} />;
+                        default: return <Activity size={18} />;
+                    }
+                };
+
+                return (
+                    <section className="py-12 border-t border-white/5 relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#8B5CF6]/5 to-[#00F5FF]/5 rounded-3xl -z-10 blur-xl opacity-50"></div>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-6 text-center">Radar: Current Obsessions</h3>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {activeObs.map((item, idx) => (
+                                <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3 flex items-center gap-3 backdrop-blur-sm hover:border-[#00F5FF]/30 transition-colors group">
+                                    <div className="text-[#00F5FF] group-hover:text-[#8B5CF6] group-hover:scale-110 transition-all">
+                                        {getIcon(item.category)}
+                                    </div>
+                                    <div className="flex flex-col text-left">
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Currently {item.category}</span>
+                                        <span className="text-white text-sm font-medium">{item.value}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            })()}
+
             {/* Latest Gallery Section */}
             <section className="py-20 border-t border-white/5">
                 <div className="flex justify-between items-end mb-10">
@@ -140,9 +181,6 @@ const Home = ({ apiStatus }) => {
                     </Link>
                 </div>
             </section>
-
-            {/* Floating Audio Player */}
-            <AudioPlayer />
         </div>
         </>
     );

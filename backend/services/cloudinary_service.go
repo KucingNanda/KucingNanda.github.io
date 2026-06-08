@@ -11,7 +11,7 @@ import (
 )
 
 // UploadImageToCloudinary menerima file multipart dan mengunggahnya ke Cloudinary
-func UploadImageToCloudinary(fileHeader *multipart.FileHeader) (string, error) {
+func UploadImageToCloudinary(fileHeader *multipart.FileHeader, folderName string) (string, error) {
 	// Ambil CLOUDINARY_URL dari environment
 	cldURL := os.Getenv("CLOUDINARY_URL")
 	if cldURL == "" {
@@ -31,10 +31,10 @@ func UploadImageToCloudinary(fileHeader *multipart.FileHeader) (string, error) {
 	}
 	defer file.Close()
 
-	// Unggah file ke folder "webpribadi_gallery" di Cloudinary (mendukung gambar dan audio)
+	// Unggah file ke folder dinamis di Cloudinary (mendukung gambar dan audio)
 	ctx := context.Background()
 	resp, err := cld.Upload.Upload(ctx, file, uploader.UploadParams{
-		Folder:       "webpribadi_gallery",
+		Folder:       folderName,
 		ResourceType: "auto",
 	})
 

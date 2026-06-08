@@ -22,9 +22,9 @@ func SeedUser() {
 	var count int64
 	DB.Model(&models.User{}).Count(&count)
 	if count == 0 {
-		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("noelle27"), bcrypt.DefaultCost)
 		user := models.User{
-			Username: "admin",
+			Username: "nanda24",
 			Password: string(hashedPassword),
 		}
 		if err := DB.Create(&user).Error; err != nil {

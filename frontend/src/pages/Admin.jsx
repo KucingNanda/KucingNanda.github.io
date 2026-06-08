@@ -4,7 +4,6 @@ import { Settings, LogOut, Home, Palette, Gamepad2, Lock, User, Music } from 'lu
 import GalleryManager from './admin/GalleryManager';
 import GamesManager from './admin/GamesManager';
 import VaultManager from './admin/VaultManager';
-import PlaylistManager from './admin/PlaylistManager';
 import ProfileManager from './admin/ProfileManager';
 
 // Protected Route Component Wrapper
@@ -27,7 +26,6 @@ const Admin = () => {
     { id: 'gallery', label: 'Gallery', icon: Palette },
     { id: 'games', label: 'Games', icon: Gamepad2 },
     { id: 'vault', label: 'Vault', icon: Lock },
-    { id: 'playlist', label: 'Music', icon: Music },
     { id: 'profile', label: 'Profile', icon: User }
   ];
 
@@ -81,7 +79,6 @@ const Admin = () => {
           {activeTab === 'gallery' && <GalleryManager />}
           {activeTab === 'games' && <GamesManager />}
           {activeTab === 'vault' && <VaultManager />}
-          {activeTab === 'playlist' && <PlaylistManager />}
           {activeTab === 'profile' && <ProfileManager />}
         </div>
       </main>

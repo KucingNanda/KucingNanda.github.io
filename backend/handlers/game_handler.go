@@ -3,6 +3,7 @@ package handlers
 import (
 	"gamer-hub-api/database"
 	"gamer-hub-api/models"
+	"gamer-hub-api/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,9 +20,27 @@ func GetGames(c *fiber.Ctx) error {
 // CreateGame untuk menambah data game baru
 func CreateGame(c *fiber.Ctx) error {
 	var input models.Game
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	if string(c.Request().Header.ContentType()) == "application/json" {
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+	} else {
+		input.GameName = c.FormValue("game_name")
+		input.Nickname = c.FormValue("nickname")
+		input.UID = c.FormValue("uid")
+		input.Bio = c.FormValue("bio")
+		input.IconURL = c.FormValue("icon_url")
 	}
+
+	file, err := c.FormFile("icon")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Games")
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload icon game: " + errUpload.Error()})
+		}
+		input.IconURL = secureURL
+	}
+
 	database.DB.Create(&input)
 	return c.Status(fiber.StatusCreated).JSON(input)
 }
@@ -36,11 +55,33 @@ func UpdateGame(c *fiber.Ctx) error {
 	}
 
 	var input models.Game
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	if string(c.Request().Header.ContentType()) == "application/json" {
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		if input.GameName != "" { game.GameName = input.GameName }
+		if input.Nickname != "" { game.Nickname = input.Nickname }
+		if input.UID != "" { game.UID = input.UID }
+		if input.Bio != "" { game.Bio = input.Bio }
+		if input.IconURL != "" { game.IconURL = input.IconURL }
+	} else {
+		if val := c.FormValue("game_name"); val != "" { game.GameName = val }
+		if val := c.FormValue("nickname"); val != "" { game.Nickname = val }
+		if val := c.FormValue("uid"); val != "" { game.UID = val }
+		if val := c.FormValue("bio"); val != "" { game.Bio = val }
+		if val := c.FormValue("icon_url"); val != "" { game.IconURL = val }
 	}
 
-	database.DB.Model(&game).Updates(input)
+	file, err := c.FormFile("icon")
+	if err == nil && file != nil {
+		secureURL, errUpload := services.UploadImageToCloudinary(file, "KucingAbu/Games")
+		if errUpload != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal upload icon game: " + errUpload.Error()})
+		}
+		game.IconURL = secureURL
+	}
+
+	database.DB.Save(&game)
 	return c.Status(fiber.StatusOK).JSON(game)
 }
 

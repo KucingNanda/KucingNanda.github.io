@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
 import { apiService } from '../../services/api';
+import { CustomAlert } from '../../utils/alert';
 
 const GalleryManager = () => {
   const [data, setData] = useState([]);
@@ -31,12 +32,15 @@ const GalleryManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    const result = await CustomAlert.confirmDelete();
+    if (!result.isConfirmed) return;
+
     try {
       await apiService.deleteGallery(id);
+      CustomAlert.success('Terhapus!', 'Data galeri berhasil dihapus.');
       fetchData();
     } catch (err) {
-      alert("Gagal menghapus: " + err.message);
+      CustomAlert.error('Gagal Menghapus', err.message);
     }
   };
 
@@ -93,9 +97,10 @@ const GalleryManager = () => {
       else await apiService.createGallery(payload);
       
       closeModal();
+      CustomAlert.success('Berhasil!', `Data galeri berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}.`);
       fetchData();
     } catch (err) {
-      alert("Gagal menyimpan data: " + err.message);
+      CustomAlert.error('Gagal Menyimpan', err.message);
     } finally {
       setSubmitLoading(false);
     }

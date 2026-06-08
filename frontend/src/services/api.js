@@ -45,8 +45,8 @@ export const apiService = {
     login: (credentials) => apiService.request('/login', { method: 'POST', body: JSON.stringify(credentials) }),
     
     getGames: () => apiService.request('/games'),
-    createGame: (data) => apiService.request('/games', { method: 'POST', body: JSON.stringify(data) }),
-    updateGame: (id, data) => apiService.request(`/games/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createGame: (data) => apiService.request('/games', { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data) }),
+    updateGame: (id, data) => apiService.request(`/games/${id}`, { method: 'PUT', body: data instanceof FormData ? data : JSON.stringify(data) }),
     deleteGame: (id) => apiService.request(`/games/${id}`, { method: 'DELETE' }),
 
     getGallery: () => apiService.request('/gallery'),
@@ -61,10 +61,5 @@ export const apiService = {
     getVaults: () => apiService.request('/vault'),
     createVault: (data) => apiService.request('/vault', { method: 'POST', body: JSON.stringify(data) }),
     updateVault: (id, data) => apiService.request(`/vault/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    deleteVault: (id) => apiService.request(`/vault/${id}`, { method: 'DELETE' }),
-
-    getPlaylist: () => apiService.request('/playlist'),
-    createPlaylist: (data) => apiService.request('/playlist', { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data) }),
-    updatePlaylist: (id, data) => apiService.request(`/playlist/${id}`, { method: 'PUT', body: data instanceof FormData ? data : JSON.stringify(data) }),
-    deletePlaylist: (id) => apiService.request(`/playlist/${id}`, { method: 'DELETE' }),
+    deleteVault: (id) => apiService.request(`/vault/${id}`, { method: 'DELETE' })
 };

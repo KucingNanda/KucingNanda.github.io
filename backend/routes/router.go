@@ -20,7 +20,6 @@ func SetupRoutes(app *fiber.App) {
 	api.Get("/gallery", handlers.GetGalleries)
 	api.Get("/games", handlers.GetGames)
 	api.Get("/profile", handlers.GetProfile)
-	api.Get("/playlist", handlers.GetPlaylist)
 	api.Get("/ping", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{"message": "pong"})
 	})
@@ -45,8 +44,4 @@ func SetupRoutes(app *fiber.App) {
 	protected.Post("/vault", handlers.CreateVault)
 	protected.Put("/vault/:id", handlers.UpdateVault)
 	protected.Delete("/vault/:id", handlers.DeleteVault)
-
-	protected.Post("/playlist", handlers.CreatePlaylist)
-	protected.Put("/playlist/:id", handlers.UpdatePlaylist)
-	protected.Delete("/playlist/:id", handlers.DeletePlaylist)
 }
