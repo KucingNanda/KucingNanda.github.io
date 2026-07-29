@@ -61,5 +61,7 @@ export const apiService = {
     getVaults: () => apiService.request('/vault'),
     createVault: (data) => apiService.request('/vault', { method: 'POST', body: JSON.stringify(data) }),
     updateVault: (id, data) => apiService.request(`/vault/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    deleteVault: (id) => apiService.request(`/vault/${id}`, { method: 'DELETE' })
+    deleteVault: (id) => apiService.request(`/vault/${id}`, { method: 'DELETE' }),
+
+    getAnalytics: () => apiService.request('/admin/stats')
 };

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Loader2, X, Copy, Check, ChevronRight } from 'lucide-react';
+import { Gamepad2, Loader2, X, Copy, Check, ChevronRight, Activity, Grid } from 'lucide-react';
 import { apiService } from '../services/api';
 import { Helmet } from 'react-helmet-async';
+import HoyoverseDashboard from '../components/HoyoverseDashboard';
 
 const Gaming = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // State untuk Master-Detail View
+  // State untuk Master-Detail View & Tabs
+  const [activeTab, setActiveTab] = useState('library');
   const [selectedGame, setSelectedGame] = useState(null);
   const [copied, setCopied] = useState(false);
 
@@ -95,6 +97,36 @@ const Gaming = () => {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-4 mb-10 relative z-10 border-b border-white/10 pb-4">
+        <button
+          onClick={() => setActiveTab('library')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+            activeTab === 'library'
+              ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+              : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          <Grid size={18} /> Library
+        </button>
+        <button
+          onClick={() => setActiveTab('live')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+            activeTab === 'live'
+              ? 'bg-[#00F5FF] text-black shadow-[0_0_20px_rgba(0,245,255,0.4)]'
+              : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-[#00F5FF]'
+          }`}
+        >
+          <Activity size={18} /> Hoyoverse Live
+        </button>
+      </div>
+
+      {activeTab === 'live' ? (
+        <div className="relative z-10">
+          <HoyoverseDashboard />
+        </div>
+      ) : (
+        <>
       {loading ? (
         <div className="flex justify-center items-center py-20 relative z-10">
           <Loader2 className="animate-spin text-[#00F5FF]" size={48} />
@@ -137,6 +169,8 @@ const Gaming = () => {
           <Gamepad2 className="mx-auto mb-4 text-white/20" size={48} />
           <p>Belum ada data game.</p>
         </div>
+      )}
+        </>
       )}
 
       {/* Modal Detail Game */}

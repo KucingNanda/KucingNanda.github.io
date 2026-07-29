@@ -20,6 +20,7 @@ func SetupRoutes(app *fiber.App) {
 	api.Get("/gallery", handlers.GetGalleries)
 	api.Get("/games", handlers.GetGames)
 	api.Get("/profile", handlers.GetProfile)
+	api.Get("/hoyoverse", handlers.GetHoyoverseData)
 	api.Get("/ping", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{"message": "pong"})
 	})
@@ -28,6 +29,8 @@ func SetupRoutes(app *fiber.App) {
 	protected := api.Group("/")
 	protected.Use(middleware.AuthMiddleware())
 	
+	protected.Get("/admin/stats", handlers.GetAnalytics)
+
 	protected.Post("/gallery", handlers.CreateGallery)
 	protected.Put("/gallery/:id", handlers.UpdateGallery)
 	protected.Delete("/gallery/:id", handlers.DeleteGallery)

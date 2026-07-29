@@ -18,3 +18,8 @@ dist
 # OS
 .DS_Store
 Thumbs.db
+
+# Python & Cache
+.venv/
+__pycache__/
+python_microservice/data/

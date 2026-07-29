@@ -1,80 +1,52 @@
-# 📂 Struktur Folder Proyek WebPribadi
+# 📂 Struktur Folder KucingAbu Hub (WebPribadi)
 
-Dokumen ini memetakan struktur utama dari direktori proyek **KucingAbu Personal Hub** (`WebPribadi`). File dan folder pendukung bawaan Node.js (`node_modules`) sengaja dihilangkan dari visualisasi ini agar struktur utama lebih mudah dibaca.
-
-```text
-📦 WebPribadi/
- ┣ 📜 README.md                 # Dokumentasi utama proyek
- ┣ 📜 Hasil Screening.md        # Laporan riwayat pengembangan & refactoring
- ┃
- ┣ 📂 backend/                  # MESIN & API (Golang)
- ┃ ┣ 📂 database/
- ┃ ┃ ┗ 📜 database.go           # Konfigurasi koneksi MySQL & GORM AutoMigrate
- ┃ ┣ 📂 handlers/
- ┃ ┃ ┣ 📜 auth_handler.go       # Logika Login & validasi Admin
- ┃ ┃ ┣ 📜 gallery_handler.go    # CRUD Galeri (Art, Cosplay, AI Art)
- ┃ ┃ ┣ 📜 game_handler.go       # CRUD Gaming (UID, Nickname, dll)
- ┃ ┃ ┣ 📜 playlist_handler.go   # CRUD Mini-Spotify (Upload audio ke Cloudinary)
- ┃ ┃ ┣ 📜 profile_handler.go    # CRUD Profil Utama & Tech Stack
- ┃ ┃ ┗ 📜 vault_handler.go      # CRUD Catatan Rahasia (Vault)
- ┃ ┣ 📂 middleware/
- ┃ ┃ ┣ 📜 auth.go               # Proteksi rute menggunakan JWT Token
- ┃ ┃ ┗ 📜 cors.go               # Mengizinkan akses API dari frontend React
- ┃ ┣ 📂 models/
- ┃ ┃ ┣ 📜 model_database.go     # Skema tabel (Gallery, Game, Profile, Vault, Playlist)
- ┃ ┃ ┗ 📜 model_user.go         # Skema tabel Admin (Username & Password)
- ┃ ┣ 📂 routes/
- ┃ ┃ ┗ 📜 router.go             # Pendaftaran rute API Publik & Protected (Admin)
- ┃ ┣ 📂 services/
- ┃ ┃ ┗ 📜 cloudinary.go         # Servis pengunggah gambar/audio otomatis ke Cloudinary
- ┃ ┣ 📜 .env                    # Variabel rahasia (Kredensial Database & Cloudinary)
- ┃ ┣ 📜 go.mod                  # Daftar dependensi modul Golang
- ┃ ┣ 📜 go.sum                  # Checksum keamanan modul
- ┃ ┗ 📜 main.go                 # Titik masuk (Entry point) server Golang
- ┃
- ┗ 📂 frontend/                 # ANTARMUKA PENGGUNA (React 19 + Vite)
-   ┣ 📂 public/
-   ┃ ┣ 📜 favicon.svg           # Ikon tab browser
-   ┃ ┗ 📜 icons.svg
-   ┣ 📂 src/
-   ┃ ┣ 📂 assets/               # Gambar statis bawaan
-   ┃ ┣ 📂 components/           # Potongan UI Reusable
-   ┃ ┃ ┣ 📜 AudioPlayer.jsx     # Widget floating pemutar musik pintar
-   ┃ ┃ ┣ 📜 Footer.jsx          # Bagian bawah web (menampilkan link sosmed)
-   ┃ ┃ ┣ 📜 Navbar.jsx          # Menu navigasi atas
-   ┃ ┃ ┗ 📜 PageLayout.jsx      # Pembungkus halaman dengan efek transisi
-   ┃ ┣ 📂 pages/                # Halaman Utama
-   ┃ ┃ ┣ 📂 admin/              # KOMPONEN ADMIN MODULAR (Clean Code)
-   ┃ ┃ ┃ ┣ 📜 GalleryManager.jsx  # Antarmuka pengelola Galeri
-   ┃ ┃ ┃ ┣ 📜 GamesManager.jsx    # Antarmuka pengelola Game
-   ┃ ┃ ┃ ┣ 📜 PlaylistManager.jsx # Antarmuka pengelola Lagu
-   ┃ ┃ ┃ ┣ 📜 ProfileManager.jsx  # Antarmuka pengelola Profil & Bio
-   ┃ ┃ ┃ ┗ 📜 VaultManager.jsx    # Antarmuka pengelola Catatan Kredensial
-   ┃ ┃ ┣ 📜 About.jsx           # Halaman Tentang Saya
-   ┃ ┃ ┣ 📜 Admin.jsx           # Layout Induk Dasbor Admin
-   ┃ ┃ ┣ 📜 Gallery.jsx         # Halaman Publik: Koleksi Karya
-   ┃ ┃ ┣ 📜 Gaming.jsx          # Halaman Publik: Profil Game
-   ┃ ┃ ┣ 📜 Home.jsx            # Beranda (Bento Grid)
-   ┃ ┃ ┗ 📜 Login.jsx           # Halaman pintu masuk (Autentikasi Admin)
-   ┃ ┣ 📂 services/
-   ┃ ┃ ┗ 📜 api.js              # Jembatan komunikasi data Frontend ke Backend (Axios/Fetch)
-   ┃ ┣ 📜 App.jsx               # Pengatur Rute (React Router)
-   ┃ ┣ 📜 index.css             # Tailwind CSS & custom styling (Glassmorphism)
-   ┃ ┗ 📜 main.jsx              # Titik masuk render React
-   ┣ 📜 index.html              # Kerangka HTML utama
-   ┣ 📜 package.json            # Daftar dependensi modul NPM
-   ┣ 📜 tailwind.config.js      # Konfigurasi utility Tailwind CSS
-   ┗ 📜 vite.config.js          # Konfigurasi build tools Vite
-```
+Dokumentasi ini menjelaskan hierarki dan fungsi dari masing-masing folder dalam proyek Anda. Ini sangat berguna jika Anda ingin menelusuri atau memodifikasi fitur tertentu di masa depan.
 
 ---
 
-## 🧭 Cara Membaca Struktur Ini
-- Jika Anda ingin menambah **fitur baru** (contoh: *Guestbook*), Anda perlu menyentuh:
-  1. `backend/models/model_database.go` (Bikin tabel)
-  2. `backend/handlers/` (Bikin API)
-  3. `backend/routes/router.go` (Buka rute)
-  4. `frontend/src/services/api.js` (Bikin fungsi Fetch)
-  5. `frontend/src/pages/` (Bikin/edit UI halamannya).
+## 🌳 Hierarki Direktori
 
-- Folder `frontend/src/pages/admin` sengaja dipisahkan agar file `Admin.jsx` yang menjadi kerangkanya tidak kepenuhan oleh *form* yang bertele-tele. Masing-masing file di dalam sana bertugas mengurus dirinya sendiri (Membaca, Menambah, Mengubah, dan Menghapus).
+```text
+D:\NandaSR\WebPribadi\
+│
+├── 📁 backend/                 # ⚙️ Mesin Server (Golang & Fiber)
+│   ├── 📁 database/            # Logika koneksi MySQL (GORM) & seeder default
+│   ├── 📁 handlers/            # Pengendali logika API (Controllers)
+│   ├── 📁 middleware/          # Sistem gerbang masuk (Auth JWT & CORS)
+│   ├── 📁 models/              # Definisi tabel database (Structs)
+│   ├── 📁 routes/              # Daftar jalur URL/Endpoint API
+│   ├── 📁 services/            # Layanan eksternal (Integrasi Cloudinary)
+│   ├── 📁 utils/               # Fungsi bantuan (Enkripsi Bcrypt, Hash)
+│   ├── 📄 main.go              # Titik awal berjalannya server Golang
+│   ├── 📄 go.mod / go.sum      # Daftar pustaka (library) Golang
+│   └── 📄 .env                 # Konfigurasi rahasia (Kunci JWT & Database)
+│
+├── 📁 frontend/                # 💻 Antarmuka Pengguna (React & Vite)
+│   ├── 📁 public/              # Aset statis dasar (ikon, gambar logo)
+│   ├── 📁 src/
+│   │   ├── 📁 components/      # Kepingan UI yang bisa dipakai ulang (Navbar, Footer)
+│   │   ├── 📁 pages/           # Halaman utama website
+│   │   │   ├── 📁 admin/       # Sub-halaman manajer khusus panel Admin
+│   │   │   ├── 📄 Home.jsx     # Halaman Dashboard Utama
+│   │   │   ├── 📄 Admin.jsx    # Halaman Induk Admin Panel
+│   │   │   ├── 📄 Login.jsx    # Halaman Masuk Admin
+│   │   │   └── ...             # Halaman lain (Gallery, Gaming, About)
+│   │   ├── 📁 services/        # Jalur komunikasi ke Backend (api.js)
+│   │   ├── 📁 utils/           # Fungsi UI (Konfigurasi SweetAlert2 dll)
+│   │   ├── 📄 App.jsx          # Pengaturan Router navigasi utama
+│   │   ├── 📄 main.jsx         # Titik awal berjalannya React
+│   │   └── 📄 index.css        # Gaya dasar Tailwind (Global CSS)
+│   │
+│   ├── 📄 tailwind.config.js   # Aturan desain dan warna tema Tailwind
+│   ├── 📄 vite.config.js       # Pengaturan *bundler* pengembangan
+│   └── 📄 package.json         # Daftar pustaka (library) JavaScript/React
+│
+└── 📄 README.md                # Dokumentasi dasar panduan instalasi
+```
+
+## 🔍 Cara Menemukan File dengan Cepat
+- **Ingin mengubah warna atau layout utama?** Cek `frontend/tailwind.config.js` atau `index.css`.
+- **Ingin mengubah isi tabel database?** Cek `backend/models/model_database.go`.
+- **Ingin menambahkan fitur di halaman depan?** Cek `frontend/src/pages/Home.jsx`.
+- **Ingin mengganti alert pop-up?** Cek `frontend/src/utils/alert.js`.
+- **Ingin mengatur kunci API atau pengaturan koneksi?** Cek `backend/.env`.

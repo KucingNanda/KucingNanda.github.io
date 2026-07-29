@@ -18,6 +18,7 @@ import About from './pages/About';
 import Login from './pages/Login';
 import Admin, { ProtectedRoute } from './pages/Admin';
 
+
 export default function App() {
   const [apiStatus, setApiStatus] = useState('offline');
 
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/" element={<Home apiStatus={apiStatus} />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/gaming" element={<Gaming />} />
+
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
               <Route 

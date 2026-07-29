@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, Loader2, X, Eye, EyeOff } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Edit2, Loader2, X } from 'lucide-react';
 import { apiService } from '../../services/api';
 import { CustomAlert } from '../../utils/alert';
 
@@ -12,10 +12,6 @@ const VaultManager = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -27,6 +23,10 @@ const VaultManager = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleDelete = async (id) => {
     const result = await CustomAlert.confirmDelete();

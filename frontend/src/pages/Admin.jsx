@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
-import { Settings, LogOut, Home, Palette, Gamepad2, Lock, User, Music } from 'lucide-react';
+import { Settings, LogOut, Home, Palette, Gamepad2, Lock, User, TrendingUp } from 'lucide-react';
+import DashboardAnalytics from './admin/DashboardAnalytics';
 import GalleryManager from './admin/GalleryManager';
 import GamesManager from './admin/GamesManager';
 import VaultManager from './admin/VaultManager';
@@ -14,7 +15,7 @@ export const ProtectedRoute = ({ children }) => {
 };
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('gallery');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,6 +24,7 @@ const Admin = () => {
   };
 
   const tabs = [
+    { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
     { id: 'gallery', label: 'Gallery', icon: Palette },
     { id: 'games', label: 'Games', icon: Gamepad2 },
     { id: 'vault', label: 'Vault', icon: Lock },
@@ -76,6 +78,7 @@ const Admin = () => {
       {/* Main Content Area */}
       <main className="flex-1 min-w-0">
         <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 relative min-h-full">
+          {activeTab === 'dashboard' && <DashboardAnalytics />}
           {activeTab === 'gallery' && <GalleryManager />}
           {activeTab === 'games' && <GamesManager />}
           {activeTab === 'vault' && <VaultManager />}
