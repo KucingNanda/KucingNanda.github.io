@@ -106,20 +106,6 @@ export default function HsrDashboard({ data }) {
               </div>
             ))}
           </div>
-
-          <h2 className="text-xl font-semibold text-purple-300 border-b border-white/10 pb-2 pt-2">
-            🌌 Mode Mingguan
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-black/40 border border-purple-500/20 rounded-lg px-4 py-3 text-center hover:bg-white/5 transition-colors">
-              <span className="text-xs text-slate-400 block mb-1">Simulated Universe Buffs</span>
-              <span className="text-xl font-bold text-amber-400">{d.su_buffs} Terbuka</span>
-            </div>
-            <div className="bg-black/40 border border-purple-500/20 rounded-lg px-4 py-3 text-center hover:bg-white/5 transition-colors">
-              <span className="text-xs text-slate-400 block mb-1">SU Curios (Miracles)</span>
-              <span className="text-xl font-bold text-amber-400">{d.su_curios} Terkumpul</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

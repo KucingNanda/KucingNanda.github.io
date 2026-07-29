@@ -50,7 +50,7 @@ const GamesManager = () => {
     if (item) {
       setFormData({ ...item });
     } else {
-      setFormData({ game_name: '', nickname: '', uid: '', bio: '', icon_url: '' });
+      setFormData({ game_name: '', nickname: '', uid: '', description: '', favorite_character: '', bio: '', icon_url: '' });
     }
     setShowModal(true);
   };
@@ -83,6 +83,8 @@ const GamesManager = () => {
       payload.append('game_name', formData.game_name || '');
       payload.append('nickname', formData.nickname || '');
       payload.append('uid', formData.uid || '');
+      payload.append('description', formData.description || '');
+      payload.append('favorite_character', formData.favorite_character || '');
       payload.append('bio', formData.bio || '');
       if (selectedIcon) {
         payload.append('icon', selectedIcon);
@@ -154,8 +156,8 @@ const GamesManager = () => {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#0B0F19] border border-white/10 rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm mt-16 md:mt-0">
+          <div className="bg-[#0B0F19] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
             <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
               <h3 className="text-xl font-bold">{isEditing ? 'Edit' : 'Add'} Game</h3>
               <button onClick={closeModal} className="text-gray-400 hover:text-white transition-colors">
@@ -190,16 +192,29 @@ const GamesManager = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Nickname (In-Game)</label>
-                    <input type="text" name="nickname" value={formData.nickname || ''} onChange={handleInputChange} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                    <input type="text" name="nickname" value={formData.nickname || ''} onChange={handleInputChange} disabled={isEditing} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF] disabled:opacity-50 disabled:cursor-not-allowed" />
                   </div>
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">UID / ID Player</label>
-                    <input type="text" name="uid" value={formData.uid || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                    <input type="text" name="uid" value={formData.uid || ''} onChange={handleInputChange} disabled={isEditing} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF] disabled:opacity-50 disabled:cursor-not-allowed" />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Karakter Favorit</label>
+                    <input type="text" name="favorite_character" value={formData.favorite_character || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                  </div>
+                </div>
+                
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Bio Singkat / Rank</label>
-                  <input type="text" name="bio" value={formData.bio || ''} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF]" />
+                  <label className="block text-sm text-gray-400 mb-1">Deskripsi Personal</label>
+                  <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows="2" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF] resize-none"></textarea>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Bio Tambahan / Catatan Khusus</label>
+                  <textarea name="bio" value={formData.bio || ''} onChange={handleInputChange} rows="3" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00F5FF] resize-none"></textarea>
                 </div>
               </form>
             </div>

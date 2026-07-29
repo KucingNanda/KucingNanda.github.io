@@ -28,6 +28,8 @@ func CreateGame(c *fiber.Ctx) error {
 		input.GameName = c.FormValue("game_name")
 		input.Nickname = c.FormValue("nickname")
 		input.UID = c.FormValue("uid")
+		input.Description = c.FormValue("description")
+		input.FavoriteCharacter = c.FormValue("favorite_character")
 		input.Bio = c.FormValue("bio")
 		input.IconURL = c.FormValue("icon_url")
 	}
@@ -62,12 +64,16 @@ func UpdateGame(c *fiber.Ctx) error {
 		if input.GameName != "" { game.GameName = input.GameName }
 		if input.Nickname != "" { game.Nickname = input.Nickname }
 		if input.UID != "" { game.UID = input.UID }
+		if input.Description != "" { game.Description = input.Description }
+		if input.FavoriteCharacter != "" { game.FavoriteCharacter = input.FavoriteCharacter }
 		if input.Bio != "" { game.Bio = input.Bio }
 		if input.IconURL != "" { game.IconURL = input.IconURL }
 	} else {
 		if val := c.FormValue("game_name"); val != "" { game.GameName = val }
 		if val := c.FormValue("nickname"); val != "" { game.Nickname = val }
 		if val := c.FormValue("uid"); val != "" { game.UID = val }
+		if val := c.FormValue("description"); val != "" { game.Description = val }
+		if val := c.FormValue("favorite_character"); val != "" { game.FavoriteCharacter = val }
 		if val := c.FormValue("bio"); val != "" { game.Bio = val }
 		if val := c.FormValue("icon_url"); val != "" { game.IconURL = val }
 	}

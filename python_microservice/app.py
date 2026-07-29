@@ -62,6 +62,19 @@ async def fetch_and_cache():
             hsr_rogue = await client.get_starrail_rogue()
         except Exception:
             hsr_rogue = None
+            
+        # --- ZZZ ---
+        client.default_game = genshin.Game.ZZZ
+        client.uid = int(os.getenv("ZZZ_UID", "0"))
+        try:
+            zzz_user = await client.get_zzz_user()
+        except Exception:
+            zzz_user = None
+            
+        try:
+            zzz_notes = await client.get_zzz_notes()
+        except Exception:
+            zzz_notes = None
         
         payload = {
             "success": True,
@@ -141,6 +154,28 @@ async def fetch_and_cache():
                 # Simulated Universe
                 "su_buffs": getattr(hsr_rogue.basic_info, 'unlocked_buff_num', 0) if hsr_rogue and hasattr(hsr_rogue, 'basic_info') else 0,
                 "su_curios": getattr(hsr_rogue.basic_info, 'unlocked_miracle_num', 0) if hsr_rogue and hasattr(hsr_rogue, 'basic_info') else 0,
+            },
+            "zzz_data": {
+                # User Stats
+                "active_days": getattr(zzz_user.stats, 'active_days', 0) if zzz_user else 0,
+                "agents": getattr(zzz_user.stats, 'avatar_num', getattr(zzz_user.stats, 'character_num', 0)) if zzz_user else 0,
+                "proxy_title": getattr(zzz_user.stats, 'inter_knot_reputation', '-') if zzz_user else '-',
+                "achievements": getattr(zzz_user.stats, 'achievement_count', 0) if zzz_user else 0,
+                "bangboo": getattr(zzz_user.stats, 'bangboo_obtained', 0) if zzz_user else 0,
+                "shiyu_defense": getattr(zzz_user.stats, 'shiyu_defense_frontiers', 0) if zzz_user else 0,
+                
+                # Notes (Real-time)
+                "battery_current": zzz_notes.battery_charge.current if zzz_notes and hasattr(zzz_notes, 'battery_charge') else 0,
+                "battery_max": zzz_notes.battery_charge.max if zzz_notes and hasattr(zzz_notes, 'battery_charge') else 240,
+                "engagement_current": zzz_notes.engagement.current if zzz_notes and hasattr(zzz_notes, 'engagement') else 0,
+                "engagement_max": zzz_notes.engagement.max if zzz_notes and hasattr(zzz_notes, 'engagement') else 400,
+                "scratch_card_completed": getattr(zzz_notes, 'scratch_card_completed', False) if zzz_notes else False,
+                "video_store_state": str(getattr(zzz_notes, 'video_store_state', '')) if zzz_notes else '',
+                "coffee_status": str(getattr(zzz_notes, 'card_sign', '')) if zzz_notes else '',
+                "hollow_bounty_current": zzz_notes.hollow_zero.bounty_commission.cur_completed if zzz_notes and hasattr(zzz_notes, 'hollow_zero') and hasattr(zzz_notes.hollow_zero, 'bounty_commission') else 0,
+                "hollow_bounty_total": zzz_notes.hollow_zero.bounty_commission.total if zzz_notes and hasattr(zzz_notes, 'hollow_zero') and hasattr(zzz_notes.hollow_zero, 'bounty_commission') else 8000,
+                "weekly_point_current": zzz_notes.weekly_task.cur_point if zzz_notes and hasattr(zzz_notes, 'weekly_task') else 0,
+                "weekly_point_max": zzz_notes.weekly_task.max_point if zzz_notes and hasattr(zzz_notes, 'weekly_task') else 2100,
             }
         }
         

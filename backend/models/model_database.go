@@ -23,12 +23,14 @@ type Gallery struct {
 
 // Game mewakili koleksi gaming
 type Game struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	GameName string `gorm:"type:varchar(255);not null" json:"game_name"`
-	Nickname string `gorm:"type:varchar(100)" json:"nickname"`
-	UID      string `gorm:"type:varchar(100)" json:"uid"` // In-game UID
-	Bio      string `gorm:"type:text" json:"bio"`
-	IconURL  string `gorm:"type:text" json:"icon_url"` // URL icon gambar game
+	ID                uint   `gorm:"primaryKey" json:"id"`
+	GameName          string `gorm:"type:varchar(255);not null" json:"game_name"`
+	Nickname          string `gorm:"type:varchar(100)" json:"nickname"`
+	UID               string `gorm:"type:varchar(100)" json:"uid"` // In-game UID
+	Description       string `gorm:"type:text" json:"description"`
+	FavoriteCharacter string `gorm:"type:varchar(100)" json:"favorite_character"`
+	Bio               string `gorm:"type:text" json:"bio"`
+	IconURL           string `gorm:"type:text" json:"icon_url"` // URL icon gambar game
 }
 
 // Profile mewakili data pribadi user
