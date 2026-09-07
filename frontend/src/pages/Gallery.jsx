@@ -58,7 +58,7 @@ const Gallery = () => {
         <title>Media Gallery | KucingAbu Hub</title>
         <meta name="description" content="Koleksi karya visual, AI Art, Cosplay, dan kreasi digital eksklusif dari KucingAbu Hub." />
       </Helmet>
-      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
+      <div className="pt-28 pb-20 px-6 max-w-7xl mx-auto text-center">
       <h2 className="text-5xl font-black mb-4 uppercase italic">Media <span className="text-[#8B5CF6]">Gallery</span></h2>
       <p className="text-gray-500 mb-8">Koleksi karya visual dan eksperimen digital.</p>
       

@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div className="pt-40 pb-20 px-6 max-w-md mx-auto text-center">
+    <div className="pt-28 pb-20 px-6 max-w-md mx-auto text-center">
       <div className="bg-white/5 border border-white/10 p-8 rounded-3xl shadow-2xl">
         <div className="w-16 h-16 bg-[#8B5CF6]/20 text-[#8B5CF6] rounded-2xl flex items-center justify-center mx-auto mb-6">
           <LogIn size={32} />

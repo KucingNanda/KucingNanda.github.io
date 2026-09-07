@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+httpx
+pymysql
+sqlalchemy
+cloudinary
+python-multipart
+pyjwt
+passlib
+bcrypt
+python-dotenv

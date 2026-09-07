@@ -78,7 +78,7 @@ const About = () => {
         <title>About | KucingAbu Hub</title>
         <meta name="description" content="Kenali lebih jauh tentang arsitektur proyek, teknologi yang digunakan, dan biografi digital saya di KucingAbu Hub." />
       </Helmet>
-      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
+      <div className="pt-28 pb-20 px-6 max-w-7xl mx-auto">
       {loading ? (
         <div className="flex justify-center items-center py-20">
           <Loader2 className="animate-spin text-[#8B5CF6]" size={48} />

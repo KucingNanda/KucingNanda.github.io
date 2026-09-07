@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Loader2, ChevronDown, ChevronUp, UserCircle, Star, Quote } from 'lucide-react';
+import { Gamepad2, Loader2, UserCircle, Star, Quote } from 'lucide-react';
 import { apiService } from '../services/api';
 import { Helmet } from 'react-helmet-async';
 import GenshinDashboard from '../components/GenshinDashboard';
@@ -13,8 +13,8 @@ const Gaming = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // State untuk menyimpan ID game yang sedang terbuka accordion-nya
-  const [expandedGameId, setExpandedGameId] = useState(null);
+  // State untuk menyimpan ID game yang sedang aktif (Tab yang dipilih)
+  const [activeGameId, setActiveGameId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +28,10 @@ const Gaming = () => {
           ['Genshin Impact', 'Honkai: Star Rail', 'Zenless Zone Zero'].includes(g.game_name)
         );
         setGames(hoyoGames);
+        
+        if (hoyoGames.length > 0) {
+          setActiveGameId(hoyoGames[0].id); // Set tab pertama sebagai aktif secara default
+        }
 
         // 2. Fetch Live Stats dari Python Microservice (via Golang proxy)
         const liveData = await apiService.request('/hoyoverse');
@@ -44,15 +48,11 @@ const Gaming = () => {
     fetchData();
   }, []);
 
-  const toggleAccordion = (gameId) => {
-    setExpandedGameId(prev => (prev === gameId ? null : gameId));
-  };
-
   // Komponen Helper untuk me-render Dashboard yang tepat berdasarkan nama game
   const renderLiveDashboard = (gameName) => {
     if (!hoyoverseData) {
       return (
-        <div className="p-8 text-center text-slate-400">
+        <div className="p-8 text-center text-slate-400 border border-white/5 rounded-2xl bg-black/40 mt-6">
           <p>Data Live Stats belum tersedia atau server sedang sinkronisasi...</p>
         </div>
       );
@@ -82,6 +82,8 @@ const Gaming = () => {
     return null;
   };
 
+  const activeGame = games.find(g => g.id === activeGameId);
+
   return (
     <>
       <Helmet>
@@ -89,7 +91,7 @@ const Gaming = () => {
         <meta name="description" content="Koleksi game HoYoverse dan statistik real-time KucingAbu." />
       </Helmet>
       
-      <div className="pt-40 pb-20 px-6 max-w-7xl mx-auto relative min-h-screen font-sans">
+      <div className="pt-28 pb-20 px-6 max-w-7xl mx-auto relative min-h-screen font-sans">
         {/* Header */}
         <div className="mb-12 relative z-10">
           <h2 className="text-5xl font-black mb-2 italic tracking-tight">
@@ -109,97 +111,101 @@ const Gaming = () => {
           </div>
         ) : games && games.length > 0 ? (
           <div className="flex flex-col gap-6 relative z-10">
-            {games.map((game, idx) => {
-              const isExpanded = expandedGameId === game.id;
-              
-              return (
-                <div key={game.id || idx} className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-lg transition-all duration-300">
-                  {/* Card Header (Selalu Tampil) */}
-                  <div 
-                    onClick={() => toggleAccordion(game.id)}
-                    className="p-6 flex items-center justify-between cursor-pointer hover:bg-white/10 transition-colors group"
+            
+            {/* Tabs Navigation */}
+            <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar">
+              {games.map(game => {
+                const isActive = activeGameId === game.id;
+                return (
+                  <button
+                    key={game.id}
+                    onClick={() => setActiveGameId(game.id)}
+                    className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 min-w-max border text-left ${
+                      isActive 
+                        ? 'bg-white/10 border-[#00F5FF]/50 shadow-[0_0_20px_rgba(0,245,255,0.15)]' 
+                        : 'bg-black/40 border-white/5 text-gray-400 hover:bg-white/5 hover:text-white'
+                    }`}
                   >
-                    <div className="flex gap-5 items-center">
-                      <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${idx % 2 === 0 ? 'from-[#8B5CF6]' : 'from-[#00F5FF]'} to-black flex items-center justify-center shadow-lg shrink-0 overflow-hidden`}>
-                        {game.icon_url ? (
-                          <img src={game.icon_url} alt={game.game_name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                        ) : (
-                          <Gamepad2 className="text-white" size={28} />
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <h3 className="text-2xl font-black italic tracking-tight group-hover:text-[#00F5FF] transition-colors">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center overflow-hidden shrink-0 shadow-lg ${
+                      isActive ? 'from-[#00F5FF] to-[#8B5CF6]' : 'from-gray-700 to-black'
+                    }`}>
+                      {game.icon_url ? (
+                        <img src={game.icon_url} alt={game.game_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <Gamepad2 className="text-white" size={24} />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className={`font-black italic tracking-tight text-lg ${isActive ? 'text-white' : ''}`}>
                           {game.game_name}
                         </h3>
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-mono text-gray-400 bg-black/40 px-2 py-0.5 rounded-md border border-white/5">UID: {game.uid}</span>
-                          <span className="text-sm font-bold text-[#8B5CF6]">{game.nickname}</span>
-                          {getGameLevel(game.game_name) && (
-                            <span className="text-[10px] uppercase tracking-widest font-black text-black bg-[#00F5FF] px-2 py-0.5 rounded-sm shadow-[0_0_10px_#00F5FF]/40">
-                              {getGameLevel(game.game_name)}
-                            </span>
-                          )}
-                        </div>
+                        {getGameLevel(game.game_name) && (
+                          <span className={`text-[9px] uppercase tracking-widest font-black px-1.5 py-0.5 rounded-sm ${isActive ? 'bg-[#00F5FF] text-black shadow-[0_0_10px_#00F5FF]/40' : 'bg-white/10 text-white'}`}>
+                            {getGameLevel(game.game_name)}
+                          </span>
+                        )}
                       </div>
+                      <p className={`text-xs font-mono mt-0.5 ${isActive ? 'text-[#00F5FF]' : 'opacity-60'}`}>
+                        UID: {game.uid}
+                      </p>
                     </div>
-                    
-                    {/* Arrow Indicator */}
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isExpanded ? 'bg-[#00F5FF]/20 text-[#00F5FF] rotate-180' : 'bg-white/5 text-gray-400 group-hover:text-white'}`}>
-                      <ChevronDown size={24} />
-                    </div>
-                  </div>
+                  </button>
+                );
+              })}
+            </div>
 
-                  {/* Accordion Content (Live Stats) */}
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="border-t border-white/5 p-6 md:p-8 bg-black/20">
-                          {/* Opsi A: Data Database / Catatan Pemain */}
-                          {(game.description || game.favorite_character || game.bio) && (
-                            <div className="mb-8 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-start backdrop-blur-sm">
-                              <div className="flex-1 space-y-4">
-                                <h4 className="text-[#00F5FF] font-bold flex items-center gap-2 mb-2 uppercase tracking-widest text-xs">
-                                  <UserCircle size={16} /> Catatan Pemain
-                                </h4>
-                                
-                                {game.description && (
-                                  <p className="text-gray-300 italic text-lg leading-relaxed">
-                                    "{game.description}"
-                                  </p>
-                                )}
-                                
-                                {game.bio && (
-                                  <div className="bg-black/30 border border-white/5 rounded-xl p-4 text-sm text-gray-400 flex gap-3">
-                                    <Quote size={20} className="text-[#8B5CF6] shrink-0" />
-                                    <p className="whitespace-pre-wrap">{game.bio}</p>
-                                  </div>
-                                )}
+            {/* Active Game Content */}
+            <div className="relative z-10 w-full">
+              <AnimatePresence mode="wait">
+                {activeGame && (
+                  <motion.div
+                    key={activeGame.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
+                      {/* Opsi A: Data Database / Catatan Pemain */}
+                      {(activeGame.description || activeGame.favorite_character || activeGame.bio) && (
+                        <div className="mb-8 bg-black/40 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-start">
+                          <div className="flex-1 space-y-4">
+                            <h4 className="text-[#00F5FF] font-bold flex items-center gap-2 mb-2 uppercase tracking-widest text-xs">
+                              <UserCircle size={16} /> Catatan Pemain
+                            </h4>
+                            
+                            {activeGame.description && (
+                              <p className="text-gray-200 italic text-lg leading-relaxed font-light">
+                                "{activeGame.description}"
+                              </p>
+                            )}
+                            
+                            {activeGame.bio && (
+                              <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-gray-300 flex gap-3">
+                                <Quote size={20} className="text-[#8B5CF6] shrink-0" />
+                                <p className="whitespace-pre-wrap leading-relaxed">{activeGame.bio}</p>
                               </div>
-                              
-                              {game.favorite_character && (
-                                <div className="shrink-0 bg-black/40 border border-[#8B5CF6]/30 rounded-xl p-4 flex flex-col items-center justify-center min-w-[140px] group hover:border-[#00F5FF]/50 transition-colors">
-                                  <Star size={24} className="text-yellow-400 mb-2 group-hover:scale-110 transition-transform" />
-                                  <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Main Character</span>
-                                  <span className="font-bold text-white text-center">{game.favorite_character}</span>
-                                </div>
-                              )}
+                            )}
+                          </div>
+                          
+                          {activeGame.favorite_character && (
+                            <div className="shrink-0 bg-white/5 border border-[#8B5CF6]/30 rounded-xl p-5 flex flex-col items-center justify-center min-w-[150px] shadow-lg">
+                              <Star size={28} className="text-yellow-400 mb-2 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
+                              <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Main Character</span>
+                              <span className="font-bold text-white text-center text-lg">{activeGame.favorite_character}</span>
                             </div>
                           )}
-
-                          {renderLiveDashboard(game.game_name)}
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                      )}
+
+                      {/* Live Dashboard Section */}
+                      {renderLiveDashboard(activeGame.game_name)}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         ) : (
           <div className="text-gray-500 py-20 bg-white/5 rounded-2xl border border-white/10 text-center relative z-10">
